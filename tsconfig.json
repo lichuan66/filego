@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "strict": true,
+    "sourceMap": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "importHelpers": true,
+    "noUnusedLocals": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true
+  },
+  "include": ["packages/**/*.ts", "packages/**/*.tsx"]
+}
