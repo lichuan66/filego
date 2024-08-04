@@ -14,5 +14,12 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["packages/**/*.ts", "packages/**/*.tsx"]
+  "include": [
+    "packages/**/*.ts",
+    "packages/**/*.tsx",
+    "packages/web/postcss.config.js",
+    "packages/web/build/webpack.prod.js",
+    "packages/web/build/webpack.dev.js",
+    "packages/web/build/webpack.common.js"
+  ]
 }

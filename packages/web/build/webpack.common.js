@@ -34,7 +34,25 @@ module.exports = {
       },
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "postcss-loader", // 使用 PostCSS 处理 CSS
+            options: {
+              postcssOptions: {
+                plugins: [
+                  require("postcss-preset-env")({
+                    /* 选项 */
+                  }),
+                  // 添加其他 PostCSS 插件，如 Autoprefixer
+                  require("autoprefixer"),
+                  require("tailwindcss"),
+                ],
+              },
+            },
+          },
+        ],
       },
     ],
   },
