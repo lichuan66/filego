@@ -9,6 +9,9 @@ module.exports = {
   },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
+    alias: {
+      "@": path.resolve(__dirname, "../src"),
+    },
   },
   module: {
     rules: [
@@ -53,6 +56,15 @@ module.exports = {
             },
           },
         ],
+      },
+      {
+        test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
+        loader: "url-loader",
+        options: {
+          limit: 4096,
+          name: "images/[name].[ext]",
+          esModule: false,
+        },
       },
     ],
   },
