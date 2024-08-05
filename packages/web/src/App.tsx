@@ -1,12 +1,14 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Base from "@/pages/LoginSignup/Base.tsx";
+import Login from "@/pages/LoginSignup/Login.tsx";
+import Register from "@/pages/LoginSignup/Register.tsx";
 
 export default function App() {
   return (
     <div className="min-h-screen">
       <Routes>
-        <Route path="/" element={<Base />}></Route>
+        <Route path="/" element={<Login />}></Route>
+        <Route path="/register" element={<Register />}></Route>
       </Routes>
     </div>
   );

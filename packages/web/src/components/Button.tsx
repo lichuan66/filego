@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils.ts";
 
 type Props = {
   type?: string;
-  children?: string;
+  children?: any;
   className?: string;
   onClick?: () => void;
 };
@@ -22,7 +22,7 @@ export default function Button({
         ` bg-sky-500
        text-white font-bold text-xl 
        px-3 py-1
-       hover:bg-sky-700 min-w-24 min-h-10`,
+       hover:bg-sky-700 min-w-6 min-h-10`,
         type,
         className
       )}
