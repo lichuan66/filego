@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import IconButton from "../../components/IconButton";
@@ -19,6 +19,8 @@ export default function Base() {
   function gotoRegister() {
     navigate("/register");
   }
+
+  function login() {}
 
   return (
     <div className="min-h-screen bg-rose-500 flex justify-center items-center">
@@ -44,13 +46,15 @@ export default function Base() {
           value={password}
           onChange={setPassword}
         />
-        <Button className="mt-10 mx-auto rounded-xl w-48">登 录</Button>
+        <Button className="mt-10 mx-auto rounded-xl w-48" onClick={login}>
+          登 录
+        </Button>
         <div className="flex flex-1 flex-row items-center justify-between">
           <div className="flex flex-col items-center">
             <Button
               className="w-12 h-12 rounded-[50%]
            bg-white border-[#ccc] border 
-            flex justify-center items-center hover:bg-[#ccc] cursor-pointer"
+            flex justify-center items-center active:bg-[#ccc] md:hover:bg-[#ccc]  cursor-pointer"
             >
               <IconButton
                 icon={phoneIconPath}
@@ -65,7 +69,7 @@ export default function Base() {
             <Button
               className="w-12 h-12 rounded-[50%]
            bg-white border-[#ccc] border flex justify-center 
-           items-center hover:bg-[#ccc] cursor-pointer"
+           items-center active:bg-[#ccc] md:hover:bg-[#ccc] cursor-pointer"
             >
               <IconButton
                 icon={userIconPath}
@@ -80,7 +84,7 @@ export default function Base() {
             <Button
               className="w-12 h-12 rounded-[50%]
            bg-white border-[#ccc] border flex 
-           justify-center items-center hover:bg-[#ccc] cursor-pointer"
+           justify-center items-center active:bg-[#ccc] md:hover:bg-[#ccc] cursor-pointer"
               onClick={gotoRegister}
             >
               <IconButton
@@ -96,7 +100,7 @@ export default function Base() {
             <Button
               className="w-12 h-12 rounded-[50%]
            bg-white border-[#ccc] border flex 
-           justify-center items-center hover:bg-[#ccc] cursor-pointer"
+           justify-center items-center active:bg-[#ccc] md:hover:bg-[#ccc] cursor-pointer"
             >
               <IconButton icon={more} width={32} height={32} iconSize={32} />
             </Button>

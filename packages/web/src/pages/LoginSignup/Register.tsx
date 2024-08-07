@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import IconButton from "../../components/IconButton";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { register } from "@/api/user";
 
 export default function Base() {
   const backIconPath = require("@/assets/icons/back.svg");
@@ -16,6 +17,17 @@ export default function Base() {
 
   function gotoLogin() {
     navigate("/");
+  }
+
+  async function registerHandler() {
+    try {
+      const res = await register(username, password);
+      setUsername("");
+      setPassword("");
+      alert("注册成功");
+    } catch (error: any) {
+      console.error(error.message);
+    }
   }
 
   return (
@@ -42,13 +54,18 @@ export default function Base() {
           value={password}
           onChange={setPassword}
         />
-        <Button className="mt-10 mx-auto rounded-xl w-48">注 册</Button>
+        <Button
+          className="mt-10 mx-auto rounded-xl w-48 active:bg-[#ccc]"
+          onClick={registerHandler}
+        >
+          注 册
+        </Button>
         <div className="flex flex-1 flex-row items-center justify-between">
           <div className="flex flex-col items-center">
             <Button
               className="w-12 h-12 rounded-[50%]
            bg-white border-[#ccc] border 
-            flex justify-center items-center hover:bg-[#ccc] cursor-pointer"
+            flex justify-center items-center active:bg-[#ccc] md:hover:bg-[#ccc] cursor-pointer"
               onClick={gotoLogin}
             >
               <IconButton
@@ -65,7 +82,7 @@ export default function Base() {
             <Button
               className="w-12 h-12 rounded-[50%]
            bg-white border-[#ccc] border flex 
-           justify-center items-center hover:bg-[#ccc] cursor-pointer"
+           justify-center items-center active:bg-[#ccc] md:hover:bg-[#ccc] cursor-pointer"
             >
               <IconButton icon={more} width={32} height={32} iconSize={32} />
             </Button>

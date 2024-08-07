@@ -1,5 +1,5 @@
 {
-  "name": "@filego/database",
+  "name": "@filego/utils",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,8 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mongoose": "^8.5.2",
-    "@filego/utils": "workspace:*",
-    "@filego/config": "workspace:*"
+    "log4js": "^6.9.1"
   }
 }

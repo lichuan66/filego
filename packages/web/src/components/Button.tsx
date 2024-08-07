@@ -22,7 +22,8 @@ export default function Button({
         ` bg-sky-500
        text-white font-bold text-xl 
        px-3 py-1
-       hover:bg-sky-700 min-w-6 min-h-10`,
+        min-w-6 min-h-10
+       md:hover:bg-sky-700`,
         type,
         className
       )}
