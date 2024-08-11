@@ -65,13 +65,13 @@ export default function Input({
       />
       <IconButton
         className="absolute top-0 bottom-0 right-[10px] m-auto
-         rounded-[50%] bg-white border border-[#ccc] flex 
+         rounded-[50%] bg-white  flex 
          justify-center items-center hover:bg-[#ccc] cursor-pointer"
         style={{ width: "35px", height: "35px", display: value ? "" : "none" }}
         icon={iconPath}
-        width={20}
-        height={20}
-        iconSize={20}
+        width={15}
+        height={15}
+        iconSize={15}
         onClick={handleClickClear}
       />
     </div>

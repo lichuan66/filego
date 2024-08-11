@@ -22,7 +22,7 @@ export default function Button({
         ` bg-sky-500
        text-white font-bold text-xl 
        px-3 py-1
-        min-w-6 min-h-10
+        min-w-6 
        md:hover:bg-sky-700`,
         type,
         className

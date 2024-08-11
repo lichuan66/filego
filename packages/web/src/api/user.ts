@@ -1,6 +1,7 @@
 import { fetchPostApi } from "../lib/fetch";
+import config from "@filego/config/client";
 
-const userApi = "http://127.0.0.1:2333/api/user";
+const userApi = `http://${config.server}/api/user`;
 
 /** 用户注册 */
 export async function register(username: string, password: string) {

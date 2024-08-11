@@ -12,6 +12,12 @@ const UserSchema = new Schema({
     unique: true,
     index: true,
   },
+  phonenumber: {
+    type: String,
+    trim: true,
+    unique: true,
+    index: true,
+  },
   password: String,
   salt: String,
   avatar: String,
@@ -20,6 +26,7 @@ const UserSchema = new Schema({
 export interface UserDocument extends Document {
   username: string;
   password: string;
+  phonenumber: string;
   salt: string;
   avatar: string;
   createTime: Date;

@@ -1,15 +1,13 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import Login from "@/pages/LoginSignup/Login.tsx";
-import Register from "@/pages/LoginSignup/Register.tsx";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import routes from "./routes";
+
+const router = createBrowserRouter(routes);
 
 export default function App() {
   return (
-    <div className="min-h-screen">
-      <Routes>
-        <Route path="/" element={<Login />}></Route>
-        <Route path="/register" element={<Register />}></Route>
-      </Routes>
+    <div className={` fixed top-0 left-0 right-0 bottom-0 `}>
+      <RouterProvider router={router} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "../dist/filego"),
     filename: "bundle.js",
+    publicPath: "/",
   },
   resolve: {
     extensions: [".js", ".jsx", ".json", ".ts", ".tsx"],
@@ -62,6 +63,7 @@ module.exports = {
         loader: "url-loader",
         options: {
           limit: 4096,
+          fallback: "file-loader",
           name: "images/[name].[ext]",
           esModule: false,
         },
