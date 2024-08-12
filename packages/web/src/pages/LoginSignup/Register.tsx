@@ -54,6 +54,10 @@ export default function Base() {
   ];
 
   function gotoLogin() {
+    navigate("/login");
+  }
+
+  function gotoHome() {
     navigate("/");
   }
 
@@ -63,6 +67,7 @@ export default function Base() {
       setUsername("");
       setPassword("");
       Message.success("注册成功");
+      gotoHome();
     } catch (error: any) {
       console.error(error.message);
       Message.error(error.message);

@@ -9,6 +9,8 @@ type InputProps = {
   placeholder?: string;
   className?: string;
   inputClassName?: string;
+  iconSize?: number;
+  iconClassName?: string;
   onChange: (value: string) => void;
   onEnter?: (value: string) => void;
   onFocus?: () => void;
@@ -20,6 +22,8 @@ export default function Input({
   placeholder = "",
   className = "",
   inputClassName = "",
+  iconSize = 35,
+  iconClassName = "",
   onChange,
   onEnter = () => {},
   onFocus = () => {},
@@ -64,10 +68,17 @@ export default function Input({
         ref={$input}
       />
       <IconButton
-        className="absolute top-0 bottom-0 right-[10px] m-auto
+        className={cn(
+          `absolute top-0 bottom-0 right-[10px] m-auto
          rounded-[50%] bg-white  flex 
-         justify-center items-center hover:bg-[#ccc] cursor-pointer"
-        style={{ width: "35px", height: "35px", display: value ? "" : "none" }}
+         justify-center items-center hover:bg-[#ccc] cursor-pointer`,
+          iconClassName
+        )}
+        style={{
+          width: `${iconSize}px`,
+          height: `${iconSize}px`,
+          display: value ? "" : "none",
+        }}
         icon={iconPath}
         width={15}
         height={15}

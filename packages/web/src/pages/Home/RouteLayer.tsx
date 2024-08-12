@@ -12,29 +12,31 @@ interface MenuInfo {
   domEvent?: React.MouseEvent<HTMLElement> | React.KeyboardEvent<HTMLElement>;
 }
 
-export default function RouteLayer() {
+export interface modeType {
+  index: string;
+  name: string;
+  value: string;
+}
+
+type Props = {
+  modeTypeList: modeType[];
+  modeTypeIndex: string;
+  setModeTypeIndex: (val: string) => void;
+};
+
+export default function RouteLayer({
+  modeTypeList,
+  modeTypeIndex,
+  setModeTypeIndex,
+}: Props) {
   const moshiIconPath = require("@/assets/icons/moshi.svg");
   const duigouIconPath = require("@/assets/icons/duigou.svg");
 
   const routeList = [
-    { label: "Home", href: "/" },
-    { label: "Category", href: "/category" },
-    { label: "Subcategory", href: "/subcategory" },
-    { label: "Current Page", href: "" }, // 最后一项通常没有链接
+    { label: "根目录", href: "/" },
+    { label: "精修", href: "/精修" },
+    { label: "新建文件夹", href: "" }, // 最后一项通常没有链接
   ];
-
-  const modeTypeList = [
-    {
-      index: "1",
-      name: "列表模式",
-    },
-    {
-      index: "2",
-      name: "缩略模式",
-    },
-  ];
-
-  const [modeTypeIndex, setModeTypeIndex] = useState("1");
 
   const changeModeType = function ({ key }: MenuInfo) {
     setModeTypeIndex(key);

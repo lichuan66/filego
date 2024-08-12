@@ -4,6 +4,7 @@ import IconButton from "../../components/IconButton";
 import Avatar from "../../components/Avatar";
 import { cn } from "../../lib/utils";
 import { useNavigate } from "react-router-dom";
+import Dropdown from "../../components/Dropdown";
 
 type FuncButtonProps = {
   index: number;
@@ -11,6 +12,8 @@ type FuncButtonProps = {
   iconPath: string;
   route: string;
   className?: string;
+  buttonClassName?: string;
+  spanClassName?: string;
   onClick?: (val: number) => void;
 };
 
@@ -19,6 +22,8 @@ function FuncButton({
   name,
   iconPath,
   route,
+  spanClassName = "",
+  buttonClassName = "",
   className = "",
   onClick = (val) => {},
 }: FuncButtonProps) {
@@ -27,19 +32,64 @@ function FuncButton({
   };
 
   return (
-    <div className="flex flex-col items-center">
+    <div className={cn("group flex flex-col items-center", className)}>
       <Button
         className={cn(
           `w-12 h-12 rounded-[50%]
   bg-transparent  
    flex justify-center items-center active:bg-[#ccc] md:hover:bg-[#ccc]  cursor-pointer`,
-          className
+          buttonClassName
         )}
         onClick={setIndex}
       >
         <IconButton icon={iconPath} width={48} height={48} iconSize={48} />
       </Button>
-      <span className="text-xs mt-1 text-white">{name}</span>
+      <span className={cn("text-xs mt-1 text-skyblue-400", spanClassName)}>
+        {name}
+      </span>
+    </div>
+  );
+}
+
+function AvatarSetting({
+  avatarPath,
+  avatarSettingButtonList,
+}: {
+  avatarPath: string;
+  avatarSettingButtonList: FuncButtonProps[];
+}) {
+  return (
+    <div className=" ml-[30px] h-[200px] w-[300px] bg-gradient-to-br from-white via-white via-white via-purple-200 to-purple-300 border  rounded-lg flex flex-col">
+      <div className="px-5 w-full h-[80px] flex flex-row items-center">
+        <div>
+          <Avatar
+            className="cursor-pointer"
+            size={40}
+            src={avatarPath}
+            onClick={() => {}}
+          />
+        </div>
+        <div className="ml-4">
+          <span>Uid: 17860782213</span>
+        </div>
+      </div>
+      <div className="rounded-lg flex-1 w-full  flex flex-row flex-wrap justify-center items-center gap-5">
+        {avatarSettingButtonList.map((elem) => {
+          return (
+            <FuncButton
+              key={elem.index}
+              index={elem.index}
+              name={elem.name}
+              iconPath={elem.iconPath}
+              route={elem.route}
+              onClick={elem.onClick}
+              className="group md:hover:bg-inherit text-black "
+              buttonClassName="md:hover:bg-transparent"
+              spanClassName="group-hover:text-sky-600"
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -47,6 +97,12 @@ function FuncButton({
 export default function Sidebar() {
   const wenjianIconPath = require("@/assets/icons/wenjian.svg");
   const duihuaIconPath = require("@/assets/icons/duihua.svg");
+
+  const fankuiIconPath = require("@/assets/icons/fankui.svg");
+  const youjianIconPath = require("@/assets/icons/youjian.svg");
+  const guanyuIconPath = require("@/assets/icons/guanyu.svg");
+  const exitIconPath = require("@/assets/icons/exit.svg");
+
   const avatarPath = require("@/assets/avatar/0.jpg");
 
   const navigate = useNavigate();
@@ -72,8 +128,40 @@ export default function Sidebar() {
     },
   ];
 
+  const avatarSettingButtonList = [
+    {
+      index: 3,
+      name: "我要反馈",
+      iconPath: fankuiIconPath,
+      route: "/home",
+      onClick: setSubRouteIndex,
+    },
+    {
+      index: 4,
+      name: "联系我们",
+      iconPath: youjianIconPath,
+      route: "/aigpt",
+      onClick: setSubRouteIndex,
+    },
+    {
+      index: 5,
+      name: "关于filego",
+      iconPath: guanyuIconPath,
+      route: "/home",
+      onClick: setSubRouteIndex,
+    },
+    {
+      index: 6,
+      name: "退出登录",
+      iconPath: exitIconPath,
+      route: "/login",
+      onClick: setSubRouteIndex,
+    },
+  ];
+
   useEffect(() => {
-    const target = funcButtonList.find((elem) => elem.index === subRouteIndex);
+    const allButtonList = [...funcButtonList, ...avatarSettingButtonList];
+    const target = allButtonList.find((elem) => elem.index === subRouteIndex);
     if (target) {
       navigate(target.route);
     }
@@ -90,7 +178,8 @@ export default function Sidebar() {
               name={elem.name}
               iconPath={elem.iconPath}
               route={elem.route}
-              className={
+              className="text-white"
+              buttonClassName={
                 subRouteIndex === elem.index ? selectSubRouteClass : ""
               }
               onClick={elem.onClick}
@@ -99,7 +188,23 @@ export default function Sidebar() {
         })}
       </div>
       <div className="">
-        <Avatar src={avatarPath} />
+        <Dropdown
+          trigger={["click"]}
+          overlay={
+            <AvatarSetting
+              avatarPath={avatarPath}
+              avatarSettingButtonList={avatarSettingButtonList}
+            />
+          }
+          animation="slide-up"
+          placement="bottomRight"
+        >
+          <Avatar
+            className="cursor-pointer"
+            src={avatarPath}
+            onClick={() => {}}
+          />
+        </Dropdown>
       </div>
     </div>
   );

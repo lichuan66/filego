@@ -4,6 +4,8 @@ import Input from "../../components/Input";
 import IconButton from "../../components/IconButton";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "@/api/user";
+import Message from "../../components/Message";
 
 type FuncButtonProps = {
   name: string;
@@ -66,7 +68,22 @@ export default function Base() {
     navigate("/register");
   }
 
-  function login() {}
+  function gotoHome() {
+    navigate("/");
+  }
+
+  async function loginHandler() {
+    try {
+      const res = await login(username, password);
+      setUsername("");
+      setPassword("");
+      Message.success("登录成功");
+      gotoHome();
+    } catch (error: any) {
+      console.error(error.message);
+      Message.error(error.message);
+    }
+  }
 
   useEffect(() => {
     const handleResize = () => {
@@ -109,7 +126,10 @@ export default function Base() {
           value={password}
           onChange={setPassword}
         />
-        <Button className="mt-10 mx-auto rounded-xl w-48" onClick={login}>
+        <Button
+          className="mt-10 mx-auto rounded-xl w-48"
+          onClick={loginHandler}
+        >
           登 录
         </Button>
         <div className="flex flex-1 flex-row items-center justify-between">
