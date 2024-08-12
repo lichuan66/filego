@@ -4,7 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "cross-env NODE_ENV=development webpack server --config ./build/webpack.dev.js"
+    "dev": "cross-env NODE_ENV=development webpack server --config ./build/webpack.dev.js",
+    "build": " cross-env NODE_ENV=production DOTENV_CONFIG_PATH=../../.env webpack --config build/webpack.prod.js"
   },
   "keywords": [],
   "author": "",
