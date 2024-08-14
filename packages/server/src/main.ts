@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express from "express";
 // import initMongoDB from "@filego/database/mongoose/initMongoDB";
 import userRoutes from "./routes/user/user";
 import { Router } from "express";
@@ -17,14 +17,10 @@ const routesPath: routeListType = [["/api/user", userRoutes]];
 
   app.use(cors());
   app.use(express.json());
-  app.use(express.static(path.join(__dirname, "public")));
+  app.use(express.static(path.join(__dirname, "../public")));
 
   routesPath.forEach((routes) => {
     app.use(routes[0], routes[1]);
-  });
-
-  app.get("/", (req: Request, res: Response) => {
-    res.send("Hello World1112221!");
   });
 
   app.listen(port, () => {
