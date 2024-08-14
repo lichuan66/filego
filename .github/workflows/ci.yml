@@ -46,6 +46,9 @@ jobs:
       # - name: Running Test
       #   # 通过前面章节定义的命令行执行自动化测试
       #   run: yarn test
+      - name: Shorten SHA
+        id: short-sha
+        run: echo "::set-output name=sha::${GITHUB_SHA::8}"
       - name: Build the Docker image
         run: |
           #docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}

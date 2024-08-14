@@ -17,7 +17,7 @@ export default function ListLayer() {
       ref={divRef}
       className="flex-1 w-full  rounded-bl-lg rounded-br-lg flex flex-col"
     >
-      123456789912121212
+      123456
     </div>
   );
 }
