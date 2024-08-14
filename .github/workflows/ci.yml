@@ -59,3 +59,4 @@ jobs:
           # 推送镜像到镜像仓库
           #docker push lichuan66/${{ github.event.repository.name }}:${{ github.event.repository.name }}-master-${{ steps.short-sha.outputs.sha }}
           docker push registry.cn-shanghai.aliyuncs.com/lichuan66/filego:${{ steps.short-sha.outputs.sha }}
+          echo "registry.cn-shanghai.aliyuncs.com/lichuan66/filego:${{ steps.short-sha.outputs.sha }}"
