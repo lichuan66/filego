@@ -3,7 +3,7 @@ name: CI
 # 这里的main分支相当于master分支，github项目新建是把main设置为默认分支，我懒得改了所以就保持这样吧
 on:
   pull_request:
-    branches: master
+    branches: main
 jobs:
   # 只需要定义一个job并命名为CI
   CI:
