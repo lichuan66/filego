@@ -46,10 +46,17 @@ jobs:
       # - name: Running Test
       #   # 通过前面章节定义的命令行执行自动化测试
       #   run: yarn test
+      - name: Shorten SHA
+        id: short-sha
+        run: echo "::set-output name=sha::${GITHUB_SHA::8}"
       - name: Build the Docker image
         run: |
-          docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+          #docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }}
+          docker login --username=${{ secrets.DOCKER_USERNAME }} --password=${{ secrets.DOCKER_PASSWORD }} registry.cn-shanghai.aliyuncs.com
           # 使用Dockerfile构建镜像
-          docker build . --file Dockerfile --tag registry.filego:1.0.0
+          #docker build . --file Dockerfile --tag lichuan66/${{ github.event.repository.name }}:${{ github.event.repository.name }}-master-${{ steps.short-sha.outputs.sha }}
+          docker build . --file Dockerfile --tag registry.cn-shanghai.aliyuncs.com/lichuan66/filego:${{ steps.short-sha.outputs.sha }}
           # 推送镜像到镜像仓库
-          docker push registry.filego:1.0.0
+          #docker push lichuan66/${{ github.event.repository.name }}:${{ github.event.repository.name }}-master-${{ steps.short-sha.outputs.sha }}
+          docker push registry.cn-shanghai.aliyuncs.com/lichuan66/filego:${{ steps.short-sha.outputs.sha }}
+          echo "registry.cn-shanghai.aliyuncs.com/lichuan66/filego:${{ steps.short-sha.outputs.sha }}"
