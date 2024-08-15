@@ -7,7 +7,7 @@ export default function initMongoDB() {
     mongoose
       .connect(config.database, {})
       .then(() => {
-        logger.trace("[mongoDB] 连接成功");
+        logger.trace(`[mongoDB] 连接成功 ${config.database}`);
         resolve(null);
       })
       .catch((error) => {

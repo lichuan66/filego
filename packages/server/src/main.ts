@@ -1,19 +1,19 @@
 import express from "express";
-// import initMongoDB from "@filego/database/mongoose/initMongoDB";
+import initMongoDB from "@filego/database/mongoose/initMongoDB";
 import userRoutes from "./routes/user/user";
 import { Router } from "express";
 import cors from "cors";
 import path from "path";
+import config from "@filego/config/server";
 
 const app = express();
-const port = 2333;
 
 type routeListType = [string, Router][];
 
 const routesPath: routeListType = [["/api/user", userRoutes]];
 
 (async () => {
-  // await initMongoDB();
+  await initMongoDB();
 
   app.use(cors());
   app.use(express.json());
@@ -23,7 +23,7 @@ const routesPath: routeListType = [["/api/user", userRoutes]];
     app.use(routes[0], routes[1]);
   });
 
-  app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+  app.listen(config.port, () => {
+    console.log(`Server running at http://localhost:${config.port}`);
   });
 })();
