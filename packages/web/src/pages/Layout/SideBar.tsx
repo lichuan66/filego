@@ -70,7 +70,7 @@ function AvatarSetting({
           />
         </div>
         <div className="ml-4">
-          <span>Uid: 17860782213</span>
+          <span>Uid: 123456</span>
         </div>
       </div>
       <div className="rounded-lg flex-1 w-full  flex flex-row flex-wrap justify-center items-center gap-5">

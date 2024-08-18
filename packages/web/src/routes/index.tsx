@@ -1,10 +1,10 @@
 import React from "react";
-import { RouteObject } from "react-router-dom";
-import Login from "@/pages/LoginSignup/Login.tsx";
-import Register from "@/pages/LoginSignup/Register.tsx";
-import Layout from "@/pages/Layout/Layout";
-import Home from "@/pages/Home/Home";
-import Aigpt from "@/pages/Aigpt/Aigpt";
+import { RouteObject, Navigate } from "react-router-dom";
+import Login from "../pages/LoginSignup/Login";
+import Register from "../pages/LoginSignup/Register";
+import Layout from "../pages/Layout/Layout";
+import Home from "../pages/Home/Home";
+import Aigpt from "../pages/Aigpt/Aigpt";
 
 const routes: RouteObject[] = [
   {
@@ -26,6 +26,10 @@ const routes: RouteObject[] = [
       {
         path: "aigpt",
         element: <Aigpt />,
+      },
+      {
+        index: true, // 表示这是默认的子路由
+        element: <Navigate to="/home" replace />,
       },
     ],
   },
