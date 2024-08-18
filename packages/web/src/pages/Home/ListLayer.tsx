@@ -292,7 +292,10 @@ export default function ListLayer() {
   ];
 
   const ItemList = (item: ItemProps) => (
-    <li className="px-6 py-4 flex felx-row items-center" key={item.id}>
+    <li
+      className="px-6 py-4 flex felx-row items-center cursor-pointer active:bg-sky-100 "
+      key={item.id}
+    >
       <div>
         <IconButton
           icon={item.iconPath || wenjianjiaIconPath}

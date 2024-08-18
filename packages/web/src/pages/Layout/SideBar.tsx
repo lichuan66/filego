@@ -147,7 +147,7 @@ export default function Sidebar() {
       index: 5,
       name: "关于filego",
       iconPath: guanyuIconPath,
-      route: "/home",
+      route: "https://github.com/lichuan66/filego",
       onClick: setSubRouteIndex,
     },
     {
@@ -162,8 +162,10 @@ export default function Sidebar() {
   useEffect(() => {
     const allButtonList = [...funcButtonList, ...avatarSettingButtonList];
     const target = allButtonList.find((elem) => elem.index === subRouteIndex);
-    if (target) {
+    if (target && !target.route.includes("https://")) {
       navigate(target.route);
+    } else if (target && target.route.includes("https://")) {
+      window.location.href = target.route;
     }
   }, [subRouteIndex]);
 
