@@ -34,7 +34,7 @@ function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
   ];
 
   return (
-    <div className=" group inline-block rounded-lg w-[120px] h-[150px] bg-white ml-[24px] mb-[32px] md:hover:bg-sky-200/30 cursor-pointer">
+    <div className=" group inline-block rounded-lg w-[120px] h-[150px] bg-white hover:bg-sky-200/30 ml-[24px] mb-[32px] md:hover:bg-sky-200/30 cursor-pointer">
       <div className="relative  w-full h-full flex flex-col">
         <div className="h-[20px] w-full invisible group-hover:visible">
           <div className=" pt-2  h-[20px] w-full px-1 flex flex-row justify-between">

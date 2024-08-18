@@ -1,11 +1,15 @@
 import React, { useState } from "react";
+import { usePageType } from "../../hook/usePage";
 import ButtonLayer from "./ButtonLayer";
 import RouteLayer, { modeType } from "./RouteLayer";
 import FilesLayer from "./FilesLayer";
 import ListLayer from "./ListLayer";
+import Header from "./Header";
 
 export default function Home() {
-  const [modeTypeIndex, setModeTypeIndex] = useState("1");
+  const pageType = usePageType();
+
+  const [modeTypeIndex, setModeTypeIndex] = useState("2");
 
   const modeTypeList: modeType[] = [
     {
@@ -22,7 +26,8 @@ export default function Home() {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <ButtonLayer />
+      {pageType === "phone" && <Header />}
+      {pageType === "web" && <ButtonLayer />}
       <RouteLayer
         modeTypeList={modeTypeList}
         modeTypeIndex={modeTypeIndex}
