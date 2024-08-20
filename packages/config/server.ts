@@ -9,4 +9,8 @@ export default {
   port: env.Port ? parseInt(env.Port, 10) : 2333,
 
   database: env.Database || "mongodb://127.0.0.1:27017/filego",
+
+  jwtSecret: "7acsd9gh@",
+
+  SALT_ROUNDS: 10,
 };

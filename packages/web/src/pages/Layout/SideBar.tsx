@@ -5,6 +5,9 @@ import Avatar from "../../components/Avatar";
 import { cn } from "../../lib/utils";
 import { useNavigate } from "react-router-dom";
 import Dropdown from "../../components/Dropdown";
+import { useAvatar } from "../../hook/useUser";
+import config from "@filego/config/client";
+import { setToken } from "../../api/auth";
 
 type FuncButtonProps = {
   index: number;
@@ -65,7 +68,7 @@ function AvatarSetting({
           <Avatar
             className="cursor-pointer"
             size={40}
-            src={avatarPath}
+            src={`http://${config.Server}${avatarPath}`}
             onClick={() => {}}
           />
         </div>
@@ -108,6 +111,8 @@ export default function Sidebar() {
   const navigate = useNavigate();
 
   const [subRouteIndex, setSubRouteIndex] = useState(1);
+
+  const avatar = useAvatar();
 
   const selectSubRouteClass = "rounded-[50%]  bg-white/50 ";
 
@@ -164,6 +169,9 @@ export default function Sidebar() {
     const target = allButtonList.find((elem) => elem.index === subRouteIndex);
     if (target && !target.route.includes("https://")) {
       navigate(target.route);
+      if (target.route === "/login") {
+        setToken("");
+      }
     } else if (target && target.route.includes("https://")) {
       window.location.href = target.route;
     }
@@ -194,7 +202,7 @@ export default function Sidebar() {
           trigger={["click"]}
           overlay={
             <AvatarSetting
-              avatarPath={avatarPath}
+              avatarPath={avatar}
               avatarSettingButtonList={avatarSettingButtonList}
             />
           }
@@ -203,7 +211,7 @@ export default function Sidebar() {
         >
           <Avatar
             className="cursor-pointer"
-            src={avatarPath}
+            src={`http://${config.Server}${avatar}`}
             onClick={() => {}}
           />
         </Dropdown>

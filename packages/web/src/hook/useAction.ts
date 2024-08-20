@@ -5,6 +5,8 @@ import {
   setWidthAndHeight,
   setSiderBarOpen,
 } from "../store/reducers/pageSlice";
+import { setUserInfo } from "../store/reducers/userSlcie";
+import { UserState } from "../store/reducers/userSlcie";
 
 export default function useAction() {
   const dispatch = useDispatch();
@@ -18,6 +20,9 @@ export default function useAction() {
     },
     setSiderBarOpen(status: boolean) {
       dispatch(setSiderBarOpen({ status }));
+    },
+    setUserInfo(user: UserState) {
+      dispatch(setUserInfo({ user }));
     },
   };
 }

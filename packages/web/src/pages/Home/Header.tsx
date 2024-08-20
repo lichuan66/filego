@@ -2,12 +2,14 @@ import React from "react";
 import Avatar from "../../components/Avatar";
 import { useSiderBarOpen } from "../../hook/usePage";
 import useAction from "../../hook/useAction";
+import { useAvatar } from "../../hook/useUser";
+import config from "@filego/config/client";
 
 export default function Header() {
   const avatarPath = require("@/assets/avatar/0.jpg");
   const siderBarOpen = useSiderBarOpen();
   const { setSiderBarOpen } = useAction();
-
+  const avatar = useAvatar();
   function clickAvater() {
     setSiderBarOpen(!siderBarOpen);
   }
@@ -20,7 +22,7 @@ export default function Header() {
       <div className="relative w-full h-full flex flex-row items-center justify-center">
         {!siderBarOpen && (
           <Avatar
-            src={avatarPath}
+            src={`http://${config.Server}${avatar}`}
             className="cursor-pointer absolute left-3"
             onClick={() => {}}
             size={45}

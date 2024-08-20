@@ -6,6 +6,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "@/api/user";
 import Message from "../../components/Message";
+import useAction from "../../hook/useAction";
+import { setToken } from "../../api/auth";
 
 type FuncButtonProps = {
   name: string;
@@ -36,6 +38,7 @@ export default function Base() {
   const more = require("@/assets/icons/more.svg");
 
   const navigate = useNavigate();
+  const { setUserInfo } = useAction();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -69,12 +72,18 @@ export default function Base() {
   }
 
   function gotoHome() {
-    navigate("/");
+    navigate("/home");
   }
 
   async function loginHandler() {
     try {
       const res = await login(username, password);
+      setUserInfo({
+        _id: res._id,
+        username: res.username,
+        avatar: res.avatar,
+      });
+      setToken(res.token);
       setUsername("");
       setPassword("");
       Message.success("登录成功");
@@ -133,9 +142,10 @@ export default function Base() {
           登 录
         </Button>
         <div className="flex flex-1 flex-row items-center justify-between">
-          {FuncButtonList.map((elem) => {
+          {FuncButtonList.map((elem, id) => {
             return (
               <FuncButton
+                key={id}
                 name={elem.name}
                 iconPath={elem.iconPath}
                 onClick={elem.onClick}

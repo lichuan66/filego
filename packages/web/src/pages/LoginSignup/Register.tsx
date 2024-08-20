@@ -6,7 +6,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { register } from "@/api/user";
 import Message from "../../components/Message";
-import { cn } from "../../lib/utils";
+import useAction from "../../hook/useAction";
+import { setToken } from "../../api/auth";
 
 type FuncButtonProps = {
   name: string;
@@ -35,6 +36,7 @@ export default function Base() {
   const more = require("@/assets/icons/more.svg");
 
   const navigate = useNavigate();
+  const { setUserInfo } = useAction();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -63,7 +65,13 @@ export default function Base() {
 
   async function registerHandler() {
     try {
-      const res = await register(username, password);
+      const res: any = await register(username, password);
+      setUserInfo({
+        _id: res._id,
+        username: res.username,
+        avatar: res.avatar,
+      });
+      setToken(res.token);
       setUsername("");
       setPassword("");
       Message.success("注册成功");
@@ -122,9 +130,10 @@ export default function Base() {
           注 册
         </Button>
         <div className="flex flex-1 flex-row items-center justify-between">
-          {FuncButtonList.map((elem) => {
+          {FuncButtonList.map((elem, id) => {
             return (
               <FuncButton
+                key={id}
                 name={elem.name}
                 iconPath={elem.iconPath}
                 onClick={elem.onClick}
