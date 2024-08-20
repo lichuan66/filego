@@ -4,6 +4,7 @@ import slice from "./reducer";
 const store = configureStore({
   reducer: {
     page: slice.pageSlice,
+    user: slice.userSlcie,
   },
 });
 

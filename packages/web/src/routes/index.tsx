@@ -29,7 +29,7 @@ const routes: RouteObject[] = [
       },
       {
         index: true, // 表示这是默认的子路由
-        element: <Navigate to="/home" replace />,
+        element: <Navigate to="/login" replace />,
       },
     ],
   },
