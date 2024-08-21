@@ -60,7 +60,7 @@ export default function Base() {
   }
 
   function gotoHome() {
-    navigate("/");
+    navigate("/home");
   }
 
   async function registerHandler() {

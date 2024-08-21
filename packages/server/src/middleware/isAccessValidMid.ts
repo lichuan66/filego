@@ -8,6 +8,8 @@ const routeSet = new Set(ROUTES);
 
 export default function () {
   return async (req: any, res: any, next: any) => {
+    console.log("req.path ===>", req.path);
+
     if (routeSet.has(req.path)) {
       next();
       return;
