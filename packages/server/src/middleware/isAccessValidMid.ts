@@ -2,7 +2,7 @@ import config from "@filego/config/server";
 import logger from "@filego/utils/logger";
 import User from "@filego/database/mongoose/models/user";
 
-const ROUTES = ["/api/user/login", "/api/user/create"];
+const ROUTES = ["/api/user/login", "/api/user/create", "/login"];
 
 const routeSet = new Set(ROUTES);
 
@@ -20,15 +20,16 @@ export default function () {
       const token = req.headers.authorization.replace("Bearer ", "");
       try {
         const tokenWithoutBearer = token.replace("Bearer ", "");
-        let { id } = require("jsonwebtoken").verify(
+        let { userId } = require("jsonwebtoken").verify(
           tokenWithoutBearer,
           config.jwtSecret
         );
-        logger.info("id ===>", id);
-        const user = await User.findById(id);
+        logger.info("id ===>", userId);
+        const user = await User.findById(userId);
         if (!user) {
           res.status(401).send({ msg: "请先登录" });
         } else {
+          req.headers._username = userId;
           next();
         }
       } catch (error) {
