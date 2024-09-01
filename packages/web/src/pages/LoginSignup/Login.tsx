@@ -38,7 +38,7 @@ export default function Base() {
   const more = require("@/assets/icons/more.svg");
 
   const navigate = useNavigate();
-  const { setUserInfo } = useAction();
+  const { setUserInfo, setFileRoute } = useAction();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");

@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import config from "@filego/config/server";
 import bcrypt from "bcryptjs";
 import getRandomAvatar from "@filego/utils/getRandomAvatar";
+import path from "path";
+import { createFolder } from "../../../utils/fileHandler";
 
 enum ERROR_TYPE {
   USERNAME_NOTFOUND = "用户名不能为空",
@@ -13,10 +15,10 @@ enum ERROR_TYPE {
 }
 
 /** 生成token */
-function generateToken(user: string) {
+function generateToken(userId: string) {
   return jwt.sign(
     {
-      user,
+      userId,
     },
     config.jwtSecret,
     { expiresIn: "1 days" }
@@ -42,6 +44,14 @@ export async function userCreate(req: Request, res: Response) {
       phonenumber: "",
       password: hash,
     });
+
+    // 创建用户存储文件夹
+    const folderPath = path.join(
+      __dirname,
+      "../../../store",
+      (newUser._id as string).toString()
+    );
+    createFolder(folderPath);
 
     const token = generateToken((newUser._id as string).toString());
 
@@ -73,6 +83,14 @@ export async function userLogin(req: Request, res: Response) {
 
     const isPasswordCorrect = bcrypt.compareSync(password, user.password);
     assert(isPasswordCorrect, "密码错误");
+
+    // 创建用户存储文件夹
+    const folderPath = path.join(
+      __dirname,
+      "../../../store",
+      (user._id as string).toString()
+    );
+    createFolder(folderPath);
 
     const token = generateToken((user._id as string).toString());
 

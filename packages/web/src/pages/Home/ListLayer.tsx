@@ -4,51 +4,56 @@ import Table from "../../components/Table";
 import { usePageType } from "../../hook/usePage";
 import IconButton from "../../components/IconButton";
 import Checkbox from "../../components/Checkbox";
+import { useFileList } from "../../hook/useFile";
+// import useGetFileList from "../../hook/useGetFileList";
 
 export default function ListLayer() {
   const [winHeight, setWinHeight] = useState(0);
   const divRef = useRef(null);
   const pageType = usePageType();
 
+  // const { fileList } = useGetFileList();
+  const fileList = useFileList();
+
   const wenjianjiaIconPath = require("@/assets/icons/wenjianjia.svg");
   const tupianIconPath = require("@/assets/icons/tupian.svg");
   const pdfIconPath = require("@/assets/icons/pdf.svg");
   const zipIconPath = require("@/assets/icons/zip.svg");
 
-  const fileList = [
-    {
-      index: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      index: 2,
-      name: "图片",
-      type: "image",
-      updateTime: "08-10 17:05",
-      size: "20m",
-      iconPath: tupianIconPath,
-    },
-    {
-      index: 3,
-      name: "pdf",
-      type: "pdf",
-      updateTime: "08-10 17:05",
-      size: "33k",
-      iconPath: pdfIconPath,
-    },
-    {
-      index: 4,
-      name: "压缩包",
-      type: "zip",
-      updateTime: "08-10 17:05",
-      size: "33k",
-      iconPath: zipIconPath,
-    },
-  ];
+  // const fileList = [
+  //   {
+  //     index: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     index: 2,
+  //     name: "图片",
+  //     type: "image",
+  //     updateTime: "08-10 17:05",
+  //     size: "20m",
+  //     iconPath: tupianIconPath,
+  //   },
+  //   {
+  //     index: 3,
+  //     name: "pdf",
+  //     type: "pdf",
+  //     updateTime: "08-10 17:05",
+  //     size: "33k",
+  //     iconPath: pdfIconPath,
+  //   },
+  //   {
+  //     index: 4,
+  //     name: "压缩包",
+  //     type: "zip",
+  //     updateTime: "08-10 17:05",
+  //     size: "33k",
+  //     iconPath: zipIconPath,
+  //   },
+  // ];
 
   const tableColumns = [
     { key: "name", label: "文件名" },
@@ -56,240 +61,240 @@ export default function ListLayer() {
     { key: "size", label: "大小" },
   ];
 
-  const items = [
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 2,
-      name: "图片",
-      type: "image",
-      updateTime: "08-10 17:05",
-      size: "20m",
-      iconPath: tupianIconPath,
-    },
-    {
-      id: 3,
-      name: "pdf",
-      type: "pdf",
-      updateTime: "08-10 17:05",
-      size: "33k",
-      iconPath: pdfIconPath,
-    },
-    {
-      id: 4,
-      name: "压缩包",
-      type: "zip",
-      updateTime: "08-10 17:05",
-      size: "33k",
-      iconPath: zipIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      id: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-  ];
+  // const items = [
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "图片",
+  //     type: "image",
+  //     updateTime: "08-10 17:05",
+  //     size: "20m",
+  //     iconPath: tupianIconPath,
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "pdf",
+  //     type: "pdf",
+  //     updateTime: "08-10 17:05",
+  //     size: "33k",
+  //     iconPath: pdfIconPath,
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "压缩包",
+  //     type: "zip",
+  //     updateTime: "08-10 17:05",
+  //     size: "33k",
+  //     iconPath: zipIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  //   {
+  //     id: 1,
+  //     name: "123",
+  //     type: "folder",
+  //     updateTime: "08-10 17:05",
+  //     size: "16k",
+  //     iconPath: wenjianjiaIconPath,
+  //   },
+  // ];
 
   const ItemList = (item: ItemProps) => (
     <li
@@ -298,7 +303,7 @@ export default function ListLayer() {
     >
       <div>
         <IconButton
-          icon={item.iconPath || wenjianjiaIconPath}
+          icon={require(`@/assets/icons/${item.iconPath}`)}
           width={30}
           height={30}
           iconSize={30}
@@ -343,7 +348,7 @@ export default function ListLayer() {
               {column.key === "name" && (
                 <div>
                   <IconButton
-                    icon={rowData.iconPath || wenjianjiaIconPath}
+                    icon={require(`@/assets/icons/${rowData.iconPath}`)}
                     width={30}
                     height={30}
                     iconSize={30}
@@ -381,14 +386,14 @@ export default function ListLayer() {
         {pageType === "web" && (
           <Table
             className="py-2 px-6"
-            data={items}
+            data={fileList}
             columns={tableColumns}
             children={tableItemList}
           />
         )}
         {pageType === "phone" && (
           <List
-            items={items}
+            items={fileList}
             headerName={"全部文件"}
             headerClassName="py-4 px-4 text-xs font-bold"
             children={ItemList}

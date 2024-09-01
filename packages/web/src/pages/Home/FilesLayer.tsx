@@ -1,6 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
 import Checkbox from "../../components/Checkbox";
 import IconButton from "../../components/IconButton";
+import { useFileRoute, useFileList } from "../../hook/useFile";
+import useAction from "../../hook/useAction";
+import { modeType } from "./Home";
+import { Menu, MenuItem } from "../../components/Menu";
+import Dropdown from "rc-dropdown";
+import Modal from "../../components/Modal";
+import { deleteFile } from "../../api/fileManager";
+import Message from "../../components/Message";
+import useGetFileList from "../../hook/useGetFileList";
 
 type FileBoxProps = {
   name: string;
@@ -10,10 +19,14 @@ type FileBoxProps = {
   iconPath: string;
 };
 
-function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
+function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
+  const targetIconPath = require(`@/assets/icons/${iconPath}`);
   const fenxiangIconPath = require("@/assets/icons/fenxiang.svg");
   const xiazaiIconPath = require("@/assets/icons/xiazai.svg");
   const bluemoreIconPath = require("@/assets/icons/bluemore.svg");
+  const deleteIconPath = require("@/assets/icons/delete.svg");
+  const renameIconPath = require("@/assets/icons/rename.svg");
+  const copyIconPath = require("@/assets/icons/copy.svg");
 
   const boxSettingList = [
     {
@@ -33,9 +46,96 @@ function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
     },
   ];
 
+  const settingList: modeType[] = [
+    {
+      index: "1",
+      name: "删除",
+      value: "delete",
+      icon: deleteIconPath,
+    },
+    {
+      index: "2",
+      name: "重命名",
+      value: "rename",
+      icon: renameIconPath,
+    },
+    {
+      index: "3",
+      name: "复制",
+      value: "copy",
+      icon: copyIconPath,
+    },
+  ];
+
+  const fileRoute = useFileRoute();
+
+  const { setFileRoute } = useAction();
+  const [isOpenDelete, setIsOpenDelete] = useState(false);
+  const [needDeleteId, setNeedDeleteId] = useState<string[]>([]);
+  const { getFileListHandler } = useGetFileList();
+
+  const showDeleteFileModal = function () {
+    setIsOpenDelete(true);
+  };
+
+  const changeModeType = function (name: string, key: string) {
+    if (key === "1") {
+      console.log("name ===>", name);
+      setNeedDeleteId([name]);
+      showDeleteFileModal();
+    }
+  };
+
+  /** 删除文件 */
+  const deleteFileHandler = async function () {
+    setIsOpenDelete(false);
+    if (needDeleteId.length > 0) {
+      try {
+        const fileName = needDeleteId[0];
+        const route = fileRoute[fileRoute.length - 1].href;
+        await deleteFile(route, fileName);
+        getFileListHandler();
+        Message.success("删除成功");
+      } catch (error: any) {
+        Message.error(error.message);
+      }
+    }
+  };
+
+  /** 点击进入下一层文件夹 */
+  function enterFolder() {
+    if (type !== "folder") return;
+    const targetRoute = `${fileRoute[fileRoute.length - 1].href}${name}/`;
+    const targetFileRoute = [...fileRoute, { label: name, href: targetRoute }];
+    setFileRoute(targetFileRoute);
+  }
+
+  const MenuContent = ({ onClick }: { onClick: (e: any) => void }) => (
+    <Menu className="">
+      {settingList.map((elem) => {
+        return (
+          <MenuItem key={elem.index} onClick={onClick}>
+            <div className="bg-white md:hover:bg-sky-100 text-black pl-2 pr-6 py-2 flex flex-row justify-start items-center  cursor-pointer">
+              <IconButton
+                icon={elem.icon}
+                width={12}
+                height={12}
+                iconSize={12}
+              />
+              <span className={`ml-1`}>{elem.name}</span>
+            </div>
+          </MenuItem>
+        );
+      })}
+    </Menu>
+  );
+
   return (
     <div className=" group inline-block rounded-lg w-[120px] h-[150px] bg-white hover:bg-sky-200/30 ml-[24px] mb-[32px] md:hover:bg-sky-200/30 cursor-pointer">
-      <div className="relative  w-full h-full flex flex-col">
+      <div
+        className="relative  w-full h-full flex flex-col"
+        onClick={enterFolder}
+      >
         <div className="h-[20px] w-full invisible group-hover:visible">
           <div className=" pt-2  h-[20px] w-full px-1 flex flex-row justify-between">
             <label className="mt-[-5px]">
@@ -43,7 +143,7 @@ function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
             </label>
             <div className="flex felx-row justify-center items-center">
               {boxSettingList.map((elem, id) => {
-                return (
+                return elem.index !== 3 ? (
                   <IconButton
                     key={id}
                     icon={elem.icon}
@@ -52,6 +152,25 @@ function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
                     iconSize={20}
                     className="mx-[1px]"
                   />
+                ) : (
+                  <Dropdown
+                    trigger={["click"]}
+                    overlay={
+                      <MenuContent
+                        onClick={({ key }) => changeModeType(name, key)}
+                      />
+                    }
+                    animation="slide-up"
+                    alignPoint
+                  >
+                    <IconButton
+                      icon={elem.icon}
+                      width={18}
+                      height={18}
+                      iconSize={18}
+                      className="cursor-pointer"
+                    />
+                  </Dropdown>
                 );
               })}
             </div>
@@ -59,10 +178,15 @@ function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
         </div>
         <div className="flex-1 flex flex-col justify-center items-center">
           <div>
-            <IconButton icon={iconPath} width={60} height={60} iconSize={60} />
+            <IconButton
+              icon={targetIconPath}
+              width={60}
+              height={60}
+              iconSize={60}
+            />
           </div>
-          <div>
-            <span className="text-xs font-semibold">{name}</span>
+          <div className="w-full text-center text-ellipsis overflow-hidden whitespace-nowrap">
+            <span className="w-full text-xs font-semibold ">{name}</span>
           </div>
           <div className="mt-[-6px]">
             <span className="text-xs text-gray-500">
@@ -71,50 +195,24 @@ function FilesLayer({ name, type, updateTime, size, iconPath }: FileBoxProps) {
           </div>
         </div>
       </div>
+      <Modal
+        isOpen={isOpenDelete}
+        onClose={setIsOpenDelete}
+        onOk={deleteFileHandler}
+        showHeader={true}
+        title={"删除文件"}
+      >
+        <div className="w-60 flex flex-row justify-center items-center px-4">
+          是否删除该文件?
+        </div>
+      </Modal>
     </div>
   );
 }
 
-export default function FileList() {
-  const wenjianjiaIconPath = require("@/assets/icons/wenjianjia.svg");
-  const tupianIconPath = require("@/assets/icons/tupian.svg");
-  const pdfIconPath = require("@/assets/icons/pdf.svg");
-  const zipIconPath = require("@/assets/icons/zip.svg");
-
-  const fileList = [
-    {
-      index: 1,
-      name: "123",
-      type: "folder",
-      updateTime: "08-10 17:05",
-      size: "16k",
-      iconPath: wenjianjiaIconPath,
-    },
-    {
-      index: 2,
-      name: "图片",
-      type: "image",
-      updateTime: "08-10 17:05",
-      size: "20m",
-      iconPath: tupianIconPath,
-    },
-    {
-      index: 3,
-      name: "pdf",
-      type: "pdf",
-      updateTime: "08-10 17:05",
-      size: "33k",
-      iconPath: pdfIconPath,
-    },
-    {
-      index: 4,
-      name: "压缩包",
-      type: "zip",
-      updateTime: "08-10 17:05",
-      size: "33k",
-      iconPath: zipIconPath,
-    },
-  ];
+export default function FilesLayer() {
+  // const { fileList } = useGetFileList();
+  const fileList = useFileList();
 
   const [winHeight, setWinHeight] = useState(0);
   const divRef = useRef(null);
@@ -143,10 +241,10 @@ export default function FileList() {
         className={`w-full  overflow-y-auto `}
       >
         {winHeight &&
-          fileList.map((elem, id) => {
+          fileList.map((elem: any, id: any) => {
             return (
-              <FilesLayer
-                key={id}
+              <FileBox
+                key={elem.name}
                 name={elem.name}
                 size={elem.size}
                 type={elem.type}
