@@ -68,18 +68,20 @@ export default function RouteLayer({
       </div>
       <div>
         <Dropdown
-          trigger={["click"]}
+          trigger={["hover"]}
           overlay={menu}
           animation="slide-up"
           alignPoint
         >
-          <IconButton
-            icon={moshiIconPath}
-            width={18}
-            height={18}
-            iconSize={18}
-            className="cursor-pointer"
-          />
+          <button>
+            <IconButton
+              icon={moshiIconPath}
+              width={18}
+              height={18}
+              iconSize={18}
+              className="cursor-pointer"
+            />
+          </button>
         </Dropdown>
       </div>
     </div>

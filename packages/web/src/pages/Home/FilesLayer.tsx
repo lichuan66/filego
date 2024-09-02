@@ -9,7 +9,7 @@ import Dropdown from "rc-dropdown";
 import Modal from "../../components/Modal";
 import { deleteFile } from "../../api/fileManager";
 import Message from "../../components/Message";
-import useGetFileList from "../../hook/useGetFileList";
+import getFileListHandler from "../../lib/getFileList";
 
 type FileBoxProps = {
   name: string;
@@ -69,10 +69,9 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
 
   const fileRoute = useFileRoute();
 
-  const { setFileRoute } = useAction();
+  const { setFileRoute, setFileList } = useAction();
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [needDeleteId, setNeedDeleteId] = useState<string[]>([]);
-  const { getFileListHandler } = useGetFileList();
 
   const showDeleteFileModal = function () {
     setIsOpenDelete(true);
@@ -94,7 +93,7 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
         const fileName = needDeleteId[0];
         const route = fileRoute[fileRoute.length - 1].href;
         await deleteFile(route, fileName);
-        getFileListHandler();
+        getFileListHandler(fileRoute, setFileList);
         Message.success("删除成功");
       } catch (error: any) {
         Message.error(error.message);
@@ -154,22 +153,24 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
                   />
                 ) : (
                   <Dropdown
-                    trigger={["click"]}
+                    trigger={["hover"]}
                     overlay={
                       <MenuContent
                         onClick={({ key }) => changeModeType(name, key)}
                       />
                     }
-                    animation="slide-up"
-                    alignPoint
+                    // animation="slide-up"
+                    // alignPoint
                   >
-                    <IconButton
-                      icon={elem.icon}
-                      width={18}
-                      height={18}
-                      iconSize={18}
-                      className="cursor-pointer"
-                    />
+                    <button>
+                      <IconButton
+                        icon={elem.icon}
+                        width={18}
+                        height={18}
+                        iconSize={18}
+                        className="cursor-pointer"
+                      />
+                    </button>
                   </Dropdown>
                 );
               })}
@@ -211,11 +212,16 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
 }
 
 export default function FilesLayer() {
-  // const { fileList } = useGetFileList();
   const fileList = useFileList();
+  const fileRoute = useFileRoute();
+  const { setFileList } = useAction();
 
   const [winHeight, setWinHeight] = useState(0);
   const divRef = useRef(null);
+
+  useEffect(() => {
+    getFileListHandler(fileRoute, setFileList);
+  }, [fileRoute]);
 
   useEffect(() => {
     // @ts-ignore

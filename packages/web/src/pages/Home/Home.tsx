@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { usePageType } from "../../hook/usePage";
 import ButtonLayer from "./ButtonLayer";
 import RouteLayer from "./RouteLayer";
@@ -15,7 +15,6 @@ export interface modeType {
 
 export default function Home() {
   const pageType = usePageType();
-
   const [modeTypeIndex, setModeTypeIndex] = useState("1");
 
   const duigouIconPath = require("@/assets/icons/duigou.svg");
