@@ -5,7 +5,6 @@ import { usePageType } from "../../hook/usePage";
 import IconButton from "../../components/IconButton";
 import Checkbox from "../../components/Checkbox";
 import { useFileList } from "../../hook/useFile";
-// import useGetFileList from "../../hook/useGetFileList";
 
 export default function ListLayer() {
   const [winHeight, setWinHeight] = useState(0);

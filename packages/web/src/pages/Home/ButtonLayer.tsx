@@ -5,9 +5,9 @@ import Input from "../../components/Input";
 import { newFolder, uploadFile } from "../../api/fileManager";
 import { useFileRoute, useFileList } from "../../hook/useFile";
 import Modal from "../../components/Modal";
-import useGetFileList from "../../hook/useGetFileList";
 import Message from "../../components/Message";
 import useAction from "../../hook/useAction";
+import getFileListHandler from "../../lib/getFileList";
 
 export default function ButtonLayer() {
   const uploadIconPath = require("@/assets/icons/shangchuan.svg");
@@ -16,8 +16,8 @@ export default function ButtonLayer() {
   const [searchValue, setSearchValue] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  const { getFileListHandler } = useGetFileList();
 
+  const { setFileList } = useAction();
   const fileRoute = useFileRoute();
   const fileList = useFileList();
 
@@ -37,7 +37,7 @@ export default function ButtonLayer() {
     setIsOpen(false);
     try {
       await newFolder(route, newFolderName);
-      getFileListHandler();
+      getFileListHandler(fileRoute, setFileList);
       Message.success("新建文件夹成功");
     } catch (error: any) {
       Message.error(error.message);
@@ -63,7 +63,7 @@ export default function ButtonLayer() {
 
         try {
           await uploadFile(formData);
-          getFileListHandler();
+          getFileListHandler(fileRoute, setFileList);
           Message.success("文件上传成功");
         } catch (error: any) {
           Message.error(error.message);
