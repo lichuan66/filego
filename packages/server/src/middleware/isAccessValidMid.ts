@@ -2,7 +2,12 @@ import config from "@filego/config/server";
 import logger from "@filego/utils/logger";
 import User from "@filego/database/mongoose/models/user";
 
-const ROUTES = ["/api/user/login", "/api/user/create", "/login"];
+const ROUTES = [
+  "/api/user/login",
+  "/api/user/create",
+  "/login",
+  "/api/fileManager/downloadFile",
+];
 
 const routeSet = new Set(ROUTES);
 
