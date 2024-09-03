@@ -31,3 +31,9 @@ export async function deleteFile(route: string, fileName: string) {
   const url = `${userApi}/deleteFile`;
   return fetchDeleteApi(url, { route, fileName });
 }
+
+/** 预下载文件 */
+export async function preDownloadFile() {
+  const url = `${userApi}/preDownloadFile`;
+  return fetchGetApi(url, {});
+}

@@ -7,9 +7,11 @@ import { modeType } from "./Home";
 import { Menu, MenuItem } from "../../components/Menu";
 import Dropdown from "rc-dropdown";
 import Modal from "../../components/Modal";
-import { deleteFile } from "../../api/fileManager";
+import { deleteFile, preDownloadFile } from "../../api/fileManager";
 import Message from "../../components/Message";
 import getFileListHandler from "../../lib/getFileList";
+import config from "@filego/config/client";
+import { getToken } from "@/api/auth";
 
 type FileBoxProps = {
   name: string;
@@ -79,9 +81,10 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
 
   const changeModeType = function (name: string, key: string) {
     if (key === "1") {
-      console.log("name ===>", name);
       setNeedDeleteId([name]);
       showDeleteFileModal();
+    } else if (key === "下载") {
+      downloadFileHandler(name);
     }
   };
 
@@ -96,8 +99,27 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
         getFileListHandler(fileRoute, setFileList);
         Message.success("删除成功");
       } catch (error: any) {
+        console.log(error);
         Message.error(error.message);
       }
+    }
+  };
+
+  /** 下载文件 */
+  const downloadFileHandler = async function (fileName: string) {
+    try {
+      // await preDownloadFile();
+
+      const route = fileRoute[fileRoute.length - 1].href;
+      const downloadLink = document.createElement("a");
+      const userApi = `http://${config.Server}/api/fileManager`;
+      // 设置 href 属性为下载文件的 URL
+      downloadLink.href = `${userApi}/downloadFile?route=${route}&fileName=${fileName}&username=${getToken()}`;
+      // 触发点击事件
+      downloadLink.click();
+    } catch (error: any) {
+      console.log(error);
+      Message.error(error.message);
     }
   };
 
@@ -150,6 +172,7 @@ function FileBox({ name, type, updateTime, size, iconPath }: FileBoxProps) {
                     height={20}
                     iconSize={20}
                     className="mx-[1px]"
+                    onClick={() => changeModeType(name, elem.name)}
                   />
                 ) : (
                   <Dropdown

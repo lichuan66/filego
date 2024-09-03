@@ -9,6 +9,7 @@ import {
   writeStreamToFile,
   deleteFolder,
 } from "../../../utils/fileHandler";
+import config from "@filego/config/server";
 
 const iconType: { [key: string]: string } = {
   folder: "wenjianjia.svg",
@@ -125,6 +126,56 @@ export async function deleteFile(req: Request, res: Response) {
     res.status(200).json({});
   } catch (error: any) {
     logger.error("[server]", error.message);
+    res.status(500).json(error.message);
+  }
+}
+
+export async function preDownloadFile(req: Request, res: Response) {
+  try {
+    // 设置 Cookie
+    res.cookie("exampleCookie", "exampleValue", {
+      maxAge: 900000, // Cookie 过期时间（毫秒）
+      httpOnly: true, // 标记为 HttpOnly，防止 JavaScript 访问
+      secure: false, // 如果是 https 协议，则设置为 true
+      sameSite: "strict", // 防止 CSRF 攻击
+    });
+
+    res.status(200).json({});
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+}
+
+export async function downloadFile(req: Request, res: Response) {
+  try {
+    const { route, fileName, username } = req.query;
+
+    const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
+      "Bearer ",
+      ""
+    );
+    let { userId } = require("jsonwebtoken").verify(
+      tokenWithoutBearer,
+      config.jwtSecret
+    );
+
+    const rootPath = path.join(__dirname, "../../../store", userId);
+    const targetFolderPath = path.join(
+      rootPath,
+      JSON.parse(JSON.stringify(route))
+    );
+    const filePath = path.join(
+      targetFolderPath,
+      JSON.parse(JSON.stringify(fileName))
+    );
+
+    res.setHeader("Content-Disposition", `attachment; filename=${fileName}`);
+    res.status(200).sendFile(filePath);
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
     res.status(500).json(error.message);
   }
 }
