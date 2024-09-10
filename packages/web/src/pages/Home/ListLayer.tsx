@@ -4,7 +4,9 @@ import Table from "../../components/Table";
 import { usePageType } from "../../hook/usePage";
 import IconButton from "../../components/IconButton";
 import Checkbox from "../../components/Checkbox";
-import { useFileList } from "../../hook/useFile";
+import { useFileRoute, useFileList } from "../../hook/useFile";
+import useAction from "../../hook/useAction";
+import getFileListHandler from "../../lib/getFileList";
 
 export default function ListLayer() {
   const [winHeight, setWinHeight] = useState(0);
@@ -13,6 +15,10 @@ export default function ListLayer() {
 
   // const { fileList } = useGetFileList();
   const fileList = useFileList();
+
+  const fileRoute = useFileRoute();
+
+  const { setFileRoute, setFileList } = useAction();
 
   const wenjianjiaIconPath = require("@/assets/icons/wenjianjia.svg");
   const tupianIconPath = require("@/assets/icons/tupian.svg");
@@ -295,6 +301,22 @@ export default function ListLayer() {
   //   },
   // ];
 
+  /** 点击进入下一层文件夹 */
+  function enterFolder(value: any) {
+    console.log(value);
+    const { type, name } = value;
+    if (type !== "folder") {
+      return;
+    }
+    const targetRoute = `${fileRoute[fileRoute.length - 1].href}${name}/`;
+    const targetFileRoute = [...fileRoute, { label: name, href: targetRoute }];
+    setFileRoute(targetFileRoute);
+  }
+
+  useEffect(() => {
+    getFileListHandler(fileRoute, setFileList);
+  }, [fileRoute]);
+
   const ItemList = (item: ItemProps) => (
     <li
       className="px-6 py-4 flex felx-row items-center cursor-pointer active:bg-sky-100 "
@@ -342,6 +364,7 @@ export default function ListLayer() {
             style={{ width: colWidth[column.key] ? colWidth[column.key] : "" }}
             className={` text-left text-[14px] py-2`}
             key={rowData.key}
+            onClick={() => enterFolder(rowData)}
           >
             <div className={`flex flex-row items-center`}>
               {column.key === "name" && (

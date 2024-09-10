@@ -56,7 +56,9 @@ export default function Window({
     }
   }
 
-  function showSize() {
+  function showSize(e: any) {
+    e.stopPropagation();
+    console.log(e.target, 1234);
     setShowMiddle(!showMiddle);
   }
 
@@ -92,20 +94,20 @@ export default function Window({
         }}
         className="absolute z-50"
         onClick={selectHandler}
-        onDoubleClick={showSize}
       >
         <div
           className={`
           relative  rounded-lg
          bg-white shadow-lg flex flex-col ${
-           showMiddle ? "w-[500px] h-[500px]" : "w-screen h-screen"
+           showMiddle ? "" : "w-screen h-screen"
          }`}
         >
           <header
             className="flex flex-row justify-end items-center px-2 py-1 bg-slate-200 rounded-tl-lg rounded-tr-lg cursor-pointer"
             onMouseDown={handleDragStart}
+            onDoubleClick={showSize}
           >
-            <span className="mr-auto">{title}</span>
+            <span className="mr-auto font-bold text-xs pl-2">{title}</span>
             <Tooltip placement="top" overlay={<span>最小化</span>}>
               <button className="ml-1 w-[18px] h-[18px] rounded-[50%] flex justify-center items-center text-white bg-green-500 outline-none focus:outline-none"></button>
             </Tooltip>
@@ -122,7 +124,11 @@ export default function Window({
               ></button>
             </Tooltip>
           </header>
-          <section className=" flex-1">{children}</section>
+          <section
+            className={`${showMiddle ? "w-[500px] h-[500px]" : "flex-1"}`}
+          >
+            {children}
+          </section>
         </div>
       </div>
     )

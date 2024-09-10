@@ -179,3 +179,64 @@ export async function downloadFile(req: Request, res: Response) {
     res.status(500).json(error.message);
   }
 }
+
+export async function readImg(req: Request, res: Response) {
+  try {
+    const { route, fileName, username } = req.query;
+
+    const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
+      "Bearer ",
+      ""
+    );
+    let { userId } = require("jsonwebtoken").verify(
+      tokenWithoutBearer,
+      config.jwtSecret
+    );
+
+    const rootPath = path.join(__dirname, "../../../store", userId);
+    const targetFolderPath = path.join(
+      rootPath,
+      JSON.parse(JSON.stringify(route))
+    );
+    const filePath = path.join(
+      targetFolderPath,
+      JSON.parse(JSON.stringify(fileName))
+    );
+
+    console.log("filePath ===>", filePath);
+
+    res.status(200).sendFile(filePath);
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+}
+
+export async function readText(req: Request, res: Response) {
+  try {
+    const { route, fileName } = req.query;
+    const username = req.headers._username as string;
+
+    const rootPath = path.join(__dirname, "../../../store", username);
+    const targetFolderPath = path.join(
+      rootPath,
+      JSON.parse(JSON.stringify(route))
+    );
+    const filePath = path.join(
+      targetFolderPath,
+      JSON.parse(JSON.stringify(fileName))
+    );
+
+    const buffer = fs.readFileSync(filePath, "utf8");
+    const result = JSON.parse(JSON.stringify(buffer));
+    const contentList = result.split("\r\n");
+    console.log(contentList);
+
+    res.status(200).json(contentList);
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+}
