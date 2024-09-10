@@ -37,3 +37,9 @@ export async function preDownloadFile() {
   const url = `${userApi}/preDownloadFile`;
   return fetchGetApi(url, {});
 }
+
+/** 预下载文件 */
+export async function readText(route: string, fileName: string) {
+  const url = `${userApi}/readText`;
+  return fetchGetApi(url, { route, fileName });
+}

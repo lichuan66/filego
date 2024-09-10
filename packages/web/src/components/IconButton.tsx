@@ -8,7 +8,7 @@ type Props = {
   iconSize: number;
   className?: string;
   style?: Object;
-  onClick?: () => void;
+  onClick?: (val: any) => void;
 };
 
 export default function IconButton({

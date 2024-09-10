@@ -15,6 +15,7 @@ import config from "@filego/config/client";
 import { getToken } from "@/api/auth";
 import Window from "../../components/Window";
 import ImageBox from "../../components/ImageBox";
+import TextBox from "../../components/TextBox";
 
 type FileBoxProps = {
   name: string;
@@ -117,9 +118,9 @@ export default function FileBox({
       // await preDownloadFile();
 
       const route = fileRoute[fileRoute.length - 1].href;
-      const downloadLink = document.createElement("a");
       const userApi = `http://${config.Server}/api/fileManager`;
       // 设置 href 属性为下载文件的 URL
+      const downloadLink = document.createElement("a");
       downloadLink.href = `${userApi}/downloadFile?route=${route}&fileName=${fileName}&username=${getToken()}`;
       // 触发点击事件
       downloadLink.click();
@@ -242,7 +243,8 @@ export default function FileBox({
       {isOpenWindow &&
         ReactDOM.createPortal(
           <Window title={name} isOpen={isOpenWindow} onClose={setIsOpenWindow}>
-            <ImageBox />
+            {type === "png" && <ImageBox name={name} />}
+            {type === "txt" && <TextBox name={name} />}
           </Window>,
           document.body
         )}

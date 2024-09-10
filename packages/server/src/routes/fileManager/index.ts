@@ -7,6 +7,8 @@ import {
   deleteFile,
   downloadFile,
   preDownloadFile,
+  readImg,
+  readText,
 } from "./utils/index";
 
 const router = express.Router();
@@ -19,5 +21,7 @@ router.delete("/deleteFile", deleteFile);
 router.post("/uploadFile", upload.single("file"), uploadFile);
 router.get("/preDownloadFile", preDownloadFile);
 router.get("/downloadFile", downloadFile);
+router.get("/readImg", readImg);
+router.get("/readText", readText);
 
 export default router;

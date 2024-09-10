@@ -7,6 +7,7 @@ const ROUTES = [
   "/api/user/create",
   "/login",
   "/api/fileManager/downloadFile",
+  "/api/fileManager/readImg",
 ];
 
 const routeSet = new Set(ROUTES);
