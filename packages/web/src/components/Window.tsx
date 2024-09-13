@@ -5,6 +5,7 @@ type WindowProps = {
   children: React.ReactNode;
   isOpen: boolean;
   title: string;
+  full?: boolean;
   onClose: (val: boolean) => void;
 };
 
@@ -13,9 +14,10 @@ export default function Window({
   title,
   isOpen,
   onClose,
+  full = false,
 }: WindowProps) {
   const [position, setPosition] = useState({ x: 0, y: 0 });
-  const [showMiddle, setShowMiddle] = useState(true);
+  const [showMiddle, setShowMiddle] = useState(!full);
   const modalRef = useRef(null);
 
   // 获取视口尺寸
@@ -58,7 +60,7 @@ export default function Window({
 
   function showSize(e: any) {
     e.stopPropagation();
-    console.log(e.target, 1234);
+    if (full) return;
     setShowMiddle(!showMiddle);
   }
 

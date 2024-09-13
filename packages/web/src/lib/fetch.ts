@@ -8,17 +8,19 @@ function objectToQueryString(obj: any) {
     .join("&");
 }
 
-export function fetchGetApi(url: string, params: any) {
+export function fetchGetApi(url: string, params: any, header = {}) {
   const queryString = objectToQueryString(params);
   const newUrl = `${url}?${queryString}`;
 
   const token = getToken() || "";
+  const headers = {
+    ...header,
+    Authorization: `Bearer ${token}`,
+  };
 
   return fetch(newUrl, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    headers: headers,
   }).then(async (resp) => {
     if (resp.status === 401) {
       // Token 失效

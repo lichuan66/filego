@@ -17,6 +17,8 @@ const iconType: { [key: string]: string } = {
   txt: "txt.svg",
   zip: "zip.svg",
   png: "image.svg",
+  jpg: "image.svg",
+  undefind: "unknown.svg",
 };
 
 export async function getFileList(req: Request, res: Response) {
@@ -44,9 +46,9 @@ export async function getFileList(req: Request, res: Response) {
         type = "folder";
       }
       if (!isFolder) {
-        type = file.split(".").pop() || "undefind";
+        type = file.split(".").pop()?.toLowerCase() || "undefind";
       }
-      let iconPath = iconType[type];
+      let iconPath = iconType[type] || "unknown.svg";
 
       return {
         index: idx + 1,
@@ -58,7 +60,11 @@ export async function getFileList(req: Request, res: Response) {
       };
     });
 
-    res.status(200).json({ fileList });
+    const orderFolderList = fileList.filter((elem) => elem.type === "folder");
+    const orderFileList = fileList.filter((elem) => elem.type !== "folder");
+    const result = [...orderFolderList, ...orderFileList];
+
+    res.status(200).json({ fileList: result });
   } catch (error: any) {
     logger.error("[server]", error.message);
     res.status(500).json(error.message);
@@ -234,6 +240,47 @@ export async function readText(req: Request, res: Response) {
     console.log(contentList);
 
     res.status(200).json(contentList);
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+}
+
+export async function readPdf(req: Request, res: Response) {
+  try {
+    const { route, fileName, username } = req.query;
+    console.log(req.query);
+
+    const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
+      "Bearer ",
+      ""
+    );
+    let { userId } = require("jsonwebtoken").verify(
+      tokenWithoutBearer,
+      config.jwtSecret
+    );
+
+    const rootPath = path.join(__dirname, "../../../store", userId);
+    const targetFolderPath = path.join(
+      rootPath,
+      JSON.parse(JSON.stringify(route))
+    );
+    const filePath = path.join(
+      targetFolderPath,
+      JSON.parse(JSON.stringify(fileName))
+    );
+
+    // 创建一个读取PDF文件的流
+    const pdfReadStream = fs.createReadStream(filePath);
+
+    // 设置响应头
+    res.set({
+      "Content-Type": "application/pdf",
+    });
+
+    // 管道数据到响应对象
+    pdfReadStream.pipe(res);
   } catch (error: any) {
     logger.error("[server]", error.message);
     console.log(error);

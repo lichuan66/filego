@@ -38,8 +38,18 @@ export async function preDownloadFile() {
   return fetchGetApi(url, {});
 }
 
-/** 预下载文件 */
+/** 读取txt */
 export async function readText(route: string, fileName: string) {
   const url = `${userApi}/readText`;
   return fetchGetApi(url, { route, fileName });
+}
+
+/** 读取pdf */
+export async function readPdf(
+  route: string,
+  fileName: string,
+  pageNumber: number
+) {
+  const url = `${userApi}/readText`;
+  return fetchGetApi(url, { route, fileName, pageNumber });
 }
