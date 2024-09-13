@@ -16,6 +16,7 @@ import { getToken } from "@/api/auth";
 import Window from "../../components/Window";
 import ImageBox from "../../components/ImageBox";
 import TextBox from "../../components/TextBox";
+import PdfBox from "../../components/PdfBox";
 
 type FileBoxProps = {
   name: string;
@@ -242,9 +243,15 @@ export default function FileBox({
       </Modal>
       {isOpenWindow &&
         ReactDOM.createPortal(
-          <Window title={name} isOpen={isOpenWindow} onClose={setIsOpenWindow}>
-            {type === "png" && <ImageBox name={name} />}
-            {type === "txt" && <TextBox name={name} />}
+          <Window
+            full={/\.pdf$/i.test(name)}
+            title={name}
+            isOpen={isOpenWindow}
+            onClose={setIsOpenWindow}
+          >
+            {/\.(jpg|png)$/i.test(name) && <ImageBox name={name} />}
+            {/\.txt$/i.test(name) && <TextBox name={name} />}
+            {/\.pdf$/i.test(name) && <PdfBox name={name} />}
           </Window>,
           document.body
         )}

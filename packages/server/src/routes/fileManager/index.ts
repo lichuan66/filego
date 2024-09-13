@@ -9,6 +9,7 @@ import {
   preDownloadFile,
   readImg,
   readText,
+  readPdf,
 } from "./utils/index";
 
 const router = express.Router();
@@ -23,5 +24,6 @@ router.get("/preDownloadFile", preDownloadFile);
 router.get("/downloadFile", downloadFile);
 router.get("/readImg", readImg);
 router.get("/readText", readText);
+router.get("/readPdf", readPdf);
 
 export default router;
