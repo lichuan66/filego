@@ -7,7 +7,7 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-packages/server/src/store/*
+# packages/server/src/store/*
 
 .env
 
