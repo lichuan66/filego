@@ -9,14 +9,17 @@ import { Menu, MenuItem } from "../../components/Menu";
 import Dropdown from "rc-dropdown";
 import Modal from "../../components/Modal";
 import { deleteFile, preDownloadFile } from "../../api/fileManager";
+import { checkResourceExists } from "../../lib/fetch";
 import Message from "../../components/Message";
 import getFileListHandler from "../../lib/getFileList";
 import config from "@filego/config/client";
+import { useFileRoute } from "../hook/useFile";
 import { getToken } from "@/api/auth";
 import Window from "../../components/Window";
 import ImageBox from "../../components/ImageBox";
 import TextBox from "../../components/TextBox";
 import PdfBox from "../../components/PdfBox";
+import VideoBox from "../../components/VideoBox";
 
 type FileBoxProps = {
   name: string;
@@ -24,6 +27,7 @@ type FileBoxProps = {
   updateTime: string;
   size: string;
   iconPath: string;
+  suolueStatus: number;
 };
 
 export default function FileBox({
@@ -32,8 +36,9 @@ export default function FileBox({
   updateTime,
   size,
   iconPath,
+  suolueStatus,
 }: FileBoxProps) {
-  const targetIconPath = require(`@/assets/icons/${iconPath}`);
+  let targetIconPath = require(`@/assets/icons/${iconPath}`);
   const fenxiangIconPath = require("@/assets/icons/fenxiang.svg");
   const xiazaiIconPath = require("@/assets/icons/xiazai.svg");
   const bluemoreIconPath = require("@/assets/icons/bluemore.svg");
@@ -86,6 +91,12 @@ export default function FileBox({
   const [isOpenDelete, setIsOpenDelete] = useState(false);
   const [needDeleteId, setNeedDeleteId] = useState<string[]>([]);
   const [isOpenWindow, setIsOpenWindow] = useState(false);
+
+  if (suolueStatus) {
+    const route = fileRoute[fileRoute.length - 1].href;
+    const userApi = `http://${config.Server}/api/fileManager`;
+    targetIconPath = `${userApi}/readImg?route=${route}&fileName=${name}&hasSuolue=${1}&username=${getToken()}`;
+  }
 
   const changeModeType = function (name: string, key: string) {
     if (key === "1") {
@@ -252,6 +263,7 @@ export default function FileBox({
             {/\.(jpg|png)$/i.test(name) && <ImageBox name={name} />}
             {/\.txt$/i.test(name) && <TextBox name={name} />}
             {/\.pdf$/i.test(name) && <PdfBox name={name} />}
+            {/\.mp4$/i.test(name) && <VideoBox name={name} />}
           </Window>,
           document.body
         )}

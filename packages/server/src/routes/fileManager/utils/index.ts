@@ -3,6 +3,8 @@ import logger from "@filego/utils/logger";
 import fs from "fs";
 import path from "path";
 import dayjs from "dayjs";
+import ffmpeg from "fluent-ffmpeg";
+import sharp from "sharp";
 import {
   bytesToSize,
   createFolder,
@@ -18,6 +20,7 @@ const iconType: { [key: string]: string } = {
   zip: "zip.svg",
   png: "image.svg",
   jpg: "image.svg",
+  mp4: "video.svg",
   undefind: "unknown.svg",
 };
 
@@ -34,31 +37,65 @@ export async function getFileList(req: Request, res: Response) {
 
     const files = fs.readdirSync(targetFolderPath);
 
-    const fileList = files.map((file, idx) => {
-      const filePath = path.join(targetFolderPath, file);
-      const stats = fs.statSync(filePath);
-      let isFolder = false;
-      let type = "";
-      let size = bytesToSize(stats.size);
-      let updateTime = dayjs(stats.mtime).format("YYYY-MM-DD HH:mm:ss");
-      if (stats.isDirectory()) {
-        isFolder = true;
-        type = "folder";
-      }
-      if (!isFolder) {
-        type = file.split(".").pop()?.toLowerCase() || "undefind";
-      }
-      let iconPath = iconType[type] || "unknown.svg";
+    const fileList = files
+      .filter((file) => file !== "__thumbnails")
+      .map((file, idx) => {
+        const filePath = path.join(targetFolderPath, file);
+        const stats = fs.statSync(filePath);
+        let isFolder = false;
+        let type = "";
+        let size = bytesToSize(stats.size);
+        let updateTime = dayjs(stats.mtime).format("YYYY-MM-DD HH:mm:ss");
+        let suolueStatus = 0;
+        if (stats.isDirectory()) {
+          isFolder = true;
+          type = "folder";
+        }
+        if (!isFolder) {
+          type = file.split(".").pop()?.toLowerCase() || "undefind";
 
-      return {
-        index: idx + 1,
-        name: file,
-        type,
-        updateTime,
-        size,
-        iconPath,
-      };
-    });
+          if (/(jpg|png)$/i.test(type)) {
+            const suolueTargetFolderPath = path.join(
+              targetFolderPath,
+              "__thumbnails"
+            );
+
+            // 创建缩略图目录
+            if (!fs.existsSync(suolueTargetFolderPath)) {
+              fs.mkdirSync(suolueTargetFolderPath);
+            }
+
+            const suolueFilePath = path.join(
+              suolueTargetFolderPath,
+              `${file.replace(/\.[^/.]+$/, "")}.jpg`
+            );
+
+            if (fs.existsSync(suolueFilePath)) {
+              suolueStatus = 1;
+            } else {
+              // 使用 sharp 生成缩略图
+              sharp(filePath)
+                .resize(200, 200) // 设置缩略图尺寸
+                .toFile(suolueFilePath, (err) => {
+                  if (err) {
+                    console.error(err);
+                  }
+                });
+            }
+          }
+        }
+        let iconPath = iconType[type] || "unknown.svg";
+
+        return {
+          index: idx + 1,
+          name: file,
+          type,
+          updateTime,
+          size,
+          iconPath,
+          suolueStatus,
+        };
+      });
 
     const orderFolderList = fileList.filter((elem) => elem.type === "folder");
     const orderFileList = fileList.filter((elem) => elem.type !== "folder");
@@ -104,6 +141,31 @@ export async function uploadFile(req: Request, res: Response) {
     const targetFilePath = path.join(targetFolderPath, fileName);
 
     await writeStreamToFile(targetFilePath, file);
+
+    if (/\.(jpg|png)$/i.test(fileName)) {
+      const suolueTargetFolderPath = path.join(
+        targetFolderPath,
+        "__thumbnails"
+      );
+      const suolueTargetFilePath = path.join(
+        suolueTargetFolderPath,
+        `${fileName.replace(/\.[^/.]+$/, "")}.jpg`
+      );
+
+      // 创建缩略图目录
+      if (!fs.existsSync(suolueTargetFolderPath)) {
+        fs.mkdirSync(suolueTargetFolderPath);
+      }
+
+      // 使用 sharp 生成缩略图
+      sharp(targetFilePath)
+        .resize(200, 200) // 设置缩略图尺寸
+        .toFile(suolueTargetFilePath, (err) => {
+          if (err) {
+            console.error(err);
+          }
+        });
+    }
 
     res.status(200).json({});
   } catch (error: any) {
@@ -188,7 +250,8 @@ export async function downloadFile(req: Request, res: Response) {
 
 export async function readImg(req: Request, res: Response) {
   try {
-    const { route, fileName, username } = req.query;
+    const { route, fileName, username, hasSuolue } = req.query;
+    console.log(req.query);
 
     const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
       "Bearer ",
@@ -204,12 +267,49 @@ export async function readImg(req: Request, res: Response) {
       rootPath,
       JSON.parse(JSON.stringify(route))
     );
-    const filePath = path.join(
+    let filePath = path.join(
       targetFolderPath,
       JSON.parse(JSON.stringify(fileName))
     );
+    if (hasSuolue) {
+      const suolueTargetFolderPath = path.join(
+        targetFolderPath,
+        "__thumbnails"
+      );
+
+      // 创建缩略图目录
+      if (!fs.existsSync(suolueTargetFolderPath)) {
+        fs.mkdirSync(suolueTargetFolderPath);
+      }
+
+      filePath = path.join(
+        suolueTargetFolderPath,
+        `${JSON.parse(JSON.stringify(fileName)).replace(/\.[^/.]+$/, "")}.jpg`
+      );
+
+      console.log(filePath, 222);
+    }
 
     console.log("filePath ===>", filePath);
+
+    // 读取图片文件的最后修改时间
+    const fileStat = fs.statSync(filePath);
+    const lastModified = fileStat.mtime.toUTCString();
+    const ifModifiedSince = req.headers["if-modified-since"];
+
+    // 设置 ETag
+    const etag = fileStat.size.toString() + "-" + lastModified;
+
+    // 检查 If-Modified-Since 头
+    if (ifModifiedSince === lastModified) {
+      res.status(304).send(); // Not Modified
+      return;
+    }
+
+    // 设置响应头
+    res.setHeader("Cache-Control", `public, max-age=${config.CACHE_MAX_AGE}`);
+    res.setHeader("Last-Modified", lastModified);
+    res.setHeader("ETag", etag);
 
     res.status(200).sendFile(filePath);
   } catch (error: any) {
@@ -250,7 +350,6 @@ export async function readText(req: Request, res: Response) {
 export async function readPdf(req: Request, res: Response) {
   try {
     const { route, fileName, username } = req.query;
-    console.log(req.query);
 
     const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
       "Bearer ",
@@ -281,6 +380,59 @@ export async function readPdf(req: Request, res: Response) {
 
     // 管道数据到响应对象
     pdfReadStream.pipe(res);
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+}
+
+export async function readVideo(req: Request, res: Response) {
+  try {
+    const { route, fileName, username } = req.query;
+    console.log(req.query);
+
+    const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
+      "Bearer ",
+      ""
+    );
+    let { userId } = require("jsonwebtoken").verify(
+      tokenWithoutBearer,
+      config.jwtSecret
+    );
+
+    const rootPath = path.join(__dirname, "../../../store", userId);
+    const targetFolderPath = path.join(
+      rootPath,
+      JSON.parse(JSON.stringify(route))
+    );
+    const filePath = path.join(
+      targetFolderPath,
+      JSON.parse(JSON.stringify(fileName))
+    );
+    console.log(filePath);
+
+    // const videoStream = fs.createReadStream(filePath);
+
+    res.contentType("video/mp4");
+
+    ffmpeg(filePath)
+      // use the 'flashvideo' preset (located in /lib/presets/flashvideo.js)
+      // .preset("flashvideo")
+      .outputOption([
+        "-c:v libx264",
+        "-movflags frag_keyframe+empty_moov",
+        "-f mp4",
+      ])
+      // setup event handlers
+      .on("end", function () {
+        console.log("file has been converted succesfully");
+      })
+      .on("error", function (err) {
+        console.log("an error happened: " + err.message);
+      })
+      // save to stream
+      .pipe(res, { end: true });
   } catch (error: any) {
     logger.error("[server]", error.message);
     console.log(error);

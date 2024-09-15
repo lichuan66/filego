@@ -51,6 +51,7 @@ export default function FilesLayer() {
                 type={elem.type}
                 updateTime={elem.updateTime}
                 iconPath={elem.iconPath}
+                suolueStatus={elem.suolueStatus}
               />
             );
           })}

@@ -2,7 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useFileRoute } from "../hook/useFile";
 import { getToken } from "../api/auth";
 import config from "@filego/config/client";
-const userApi = `http://${config.Server}/api/fileManager`;
+import Loading from "./Loading";
+
 import * as pdfJS from "pdfjs-dist/legacy/build/pdf.js";
 pdfJS.GlobalWorkerOptions.workerSrc =
   "https://unpkg.com/pdfjs-dist@2.16.105/build/pdf.worker.js";
@@ -12,10 +13,12 @@ type PdfBoxProps = {
 };
 
 export default function PdfBox({ name }: PdfBoxProps) {
+  const userApi = `http://${config.Server}/api/fileManager`;
   const fileRoute = useFileRoute();
   const boxRef = useRef(null);
   const divRef = useRef(null);
   const [boxHeight, setBoxHeight] = useState(0);
+  const [loading, setLoading] = useState(true);
   let pageHeight = 0;
   let clientWidth = 0;
   let pdfObj: any = null;
@@ -103,6 +106,7 @@ export default function PdfBox({ name }: PdfBoxProps) {
   useEffect(() => {
     async function readPdfHandler() {
       pdfJS.getDocument(url).promise.then(async (pdf) => {
+        setLoading(false);
         pdfObj = pdf;
         const pagesNum = pdfObj.numPages;
         if (pagesNum > 0) {
@@ -136,7 +140,8 @@ export default function PdfBox({ name }: PdfBoxProps) {
   }, []);
 
   return (
-    <div className="w-full h-full   bg-[#f8f9fc]" ref={boxRef}>
+    <div className="w-full h-full relative   bg-[#f8f9fc]" ref={boxRef}>
+      {loading && <Loading />}
       <div
         style={{ height: `${boxHeight}px` }}
         className={`w-full overflow-auto`}

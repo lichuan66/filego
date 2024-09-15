@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useFileRoute } from "../hook/useFile";
 import { readText } from "../api/fileManager";
+import Loading from "./Loading";
 
 type TextBoxProps = {
   name: string;
@@ -10,21 +11,21 @@ export default function TextBox({ name }: TextBoxProps) {
   const fileRoute = useFileRoute();
   const route = fileRoute[fileRoute.length - 1].href;
   const [contentList, setContentList] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function readTextHandler() {
       const res = await readText(route, name);
-      console.log("res ===>", res);
       setContentList(res);
+      setLoading(false);
     }
-
-    console.log(route, name);
 
     readTextHandler();
   }, []);
 
   return (
     <div className="w-full h-full p-4 overflow-auto">
+      {loading && <Loading />}(
       <table>
         <tbody>
           <tr>
@@ -52,6 +53,7 @@ export default function TextBox({ name }: TextBoxProps) {
           </tr>
         </tbody>
       </table>
+      )
     </div>
   );
 }

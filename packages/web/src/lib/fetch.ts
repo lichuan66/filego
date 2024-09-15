@@ -101,3 +101,17 @@ export function uploadPostApi(url: string, data: any) {
     return resp.json();
   });
 }
+
+export async function checkResourceExists(url: string) {
+  try {
+    const response = await fetch(url, { method: "HEAD" });
+
+    if (response.status === 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (error) {
+    return false;
+  }
+}
