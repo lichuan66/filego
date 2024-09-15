@@ -53,3 +53,9 @@ export async function readPdf(
   const url = `${userApi}/readText`;
   return fetchGetApi(url, { route, fileName, pageNumber });
 }
+
+/** 读取video */
+export async function readVideo(route: string, fileName: string) {
+  const url = `${userApi}/readVideo`;
+  return fetchGetApi(url, { route, fileName });
+}

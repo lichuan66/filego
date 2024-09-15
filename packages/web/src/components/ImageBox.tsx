@@ -1,8 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import getBorderScale from "../lib/getBorderScale";
 import config from "@filego/config/client";
 import { getToken } from "@/api/auth";
 import { useFileRoute } from "../hook/useFile";
+import Loading from "./Loading";
 
 type ImageBoxProps = {
   // src: string;
@@ -12,6 +13,7 @@ type ImageBoxProps = {
 export default function ImageBox({ name }: ImageBoxProps) {
   const divRef = useRef(null);
   const canvasRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   const fileRoute = useFileRoute();
 
@@ -32,11 +34,13 @@ export default function ImageBox({ name }: ImageBoxProps) {
       const img = new Image();
       // 设置图片源
       img.src = src || `http://${config.Server}/avatar/0.jpg`;
+      img.crossOrigin = "";
 
       // 监听图片加载完成的事件
       img.onload = function () {
-        // 使用drawImage方法将图片绘制到canvas上
+        setLoading(false);
 
+        // 使用drawImage方法将图片绘制到canvas上
         const borderWidth = canvas?.clientWidth;
         const borderHeight = canvas?.clientHeight;
 
@@ -94,6 +98,7 @@ export default function ImageBox({ name }: ImageBoxProps) {
 
   return (
     <div className="w-full h-full" ref={divRef}>
+      {loading && <Loading />}
       <canvas id={`myCanvas_${name}`} ref={canvasRef}></canvas>
     </div>
   );

@@ -14,3 +14,7 @@
     width: 100%;
     overflow: hidden;
   }
+
+  video {
+    height: 100%;
+  }

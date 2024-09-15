@@ -9,6 +9,7 @@ const ROUTES = [
   "/api/fileManager/downloadFile",
   "/api/fileManager/readImg",
   "/api/fileManager/readPdf",
+  "/api/fileManager/readVideo",
 ];
 
 const routeSet = new Set(ROUTES);

@@ -10,6 +10,7 @@ import {
   readImg,
   readText,
   readPdf,
+  readVideo,
 } from "./utils/index";
 
 const router = express.Router();
@@ -25,5 +26,6 @@ router.get("/downloadFile", downloadFile);
 router.get("/readImg", readImg);
 router.get("/readText", readText);
 router.get("/readPdf", readPdf);
+router.get("/readVideo", readVideo);
 
 export default router;

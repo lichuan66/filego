@@ -13,6 +13,7 @@ export type FileType = {
   updateTime: string;
   size: string;
   iconPath: string;
+  suolueStatus: number;
 };
 
 export interface fileState {
