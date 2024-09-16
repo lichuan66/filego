@@ -19,7 +19,7 @@ export default function () {
   return async (req: any, res: any, next: any) => {
     console.log("req.path ===>", req.path);
 
-    if (!req.url.startsWith("/api")) {
+    if (!req.url.startsWith("/api") && !req.url.startsWith("/favicon.ico")) {
       res.sendFile(path.join(__dirname + "../../public/index.html"));
       return;
     }
