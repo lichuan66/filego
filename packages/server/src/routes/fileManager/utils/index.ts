@@ -4,6 +4,7 @@ import fs from "fs";
 import path from "path";
 import dayjs from "dayjs";
 import ffmpeg from "fluent-ffmpeg";
+import ffmpegPath from "@ffmpeg-installer/ffmpeg";
 import sharp from "sharp";
 import {
   bytesToSize,
@@ -12,6 +13,8 @@ import {
   deleteFolder,
 } from "../../../utils/fileHandler";
 import config from "@filego/config/server";
+
+ffmpeg.setFfmpegPath(ffmpegPath.path);
 
 const iconType: { [key: string]: string } = {
   folder: "wenjianjia.svg",
@@ -251,7 +254,6 @@ export async function downloadFile(req: Request, res: Response) {
 export async function readImg(req: Request, res: Response) {
   try {
     const { route, fileName, username, hasSuolue } = req.query;
-    console.log(req.query);
 
     const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
       "Bearer ",
@@ -286,11 +288,7 @@ export async function readImg(req: Request, res: Response) {
         suolueTargetFolderPath,
         `${JSON.parse(JSON.stringify(fileName)).replace(/\.[^/.]+$/, "")}.jpg`
       );
-
-      console.log(filePath, 222);
     }
-
-    console.log("filePath ===>", filePath);
 
     // 读取图片文件的最后修改时间
     const fileStat = fs.statSync(filePath);
@@ -337,7 +335,6 @@ export async function readText(req: Request, res: Response) {
     const buffer = fs.readFileSync(filePath, "utf8");
     const result = JSON.parse(JSON.stringify(buffer));
     const contentList = result.split("\r\n");
-    console.log(contentList);
 
     res.status(200).json(contentList);
   } catch (error: any) {
@@ -390,7 +387,6 @@ export async function readPdf(req: Request, res: Response) {
 export async function readVideo(req: Request, res: Response) {
   try {
     const { route, fileName, username } = req.query;
-    console.log(req.query);
 
     const tokenWithoutBearer = JSON.parse(JSON.stringify(username)).replace(
       "Bearer ",
@@ -410,7 +406,6 @@ export async function readVideo(req: Request, res: Response) {
       targetFolderPath,
       JSON.parse(JSON.stringify(fileName))
     );
-    console.log(filePath);
 
     // const videoStream = fs.createReadStream(filePath);
 

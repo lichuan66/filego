@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@filego/config": "workspace:*",
     "@filego/database": "workspace:*",
     "@filego/utils": "workspace:*",
