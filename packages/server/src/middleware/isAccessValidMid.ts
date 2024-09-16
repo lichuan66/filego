@@ -13,14 +13,17 @@ const ROUTES = [
   "/api/fileManager/readVideo",
 ];
 
+const STATISTIC = ["/favicon.ico", "/api"];
+
 const routeSet = new Set(ROUTES);
 
 export default function () {
   return async (req: any, res: any, next: any) => {
     console.log("req.path ===>", req.path);
 
-    if (!req.url.startsWith("/api")) {
+    if (!req.url.startsWith("/api") && !req.url.startsWith("/favicon.ico")) {
       res.sendFile(path.join(__dirname + "../../public/index.html"));
+      return;
     }
 
     if (routeSet.has(req.path)) {
