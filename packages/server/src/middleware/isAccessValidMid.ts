@@ -13,8 +13,6 @@ const ROUTES = [
   "/api/fileManager/readVideo",
 ];
 
-const STATISTIC = ["/favicon.ico", "/api"];
-
 const routeSet = new Set(ROUTES);
 
 export default function () {
