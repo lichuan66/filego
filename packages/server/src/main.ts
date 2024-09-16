@@ -8,6 +8,7 @@ import path from "path";
 import config from "@filego/config/server";
 import isAccessValidMid from "./middleware/isAccessValidMid";
 import bodyParser from "body-parser";
+import fs from "fs";
 
 const app = express();
 
@@ -20,6 +21,11 @@ const routesPath: routeListType = [
 
 (async () => {
   await initMongoDB();
+
+  const storePath = path.join(__dirname, "./store");
+  if (!fs.existsSync(storePath)) {
+    fs.mkdirSync(storePath);
+  }
 
   app.use(cors());
   app.use(express.json());
