@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import ReactDOM from "react-dom";
 import List, { ItemProps } from "../../components/List";
 import Table from "../../components/Table";
 import { usePageType } from "../../hook/usePage";
@@ -7,6 +8,11 @@ import Checkbox from "../../components/Checkbox";
 import { useFileRoute, useFileList } from "../../hook/useFile";
 import useAction from "../../hook/useAction";
 import getFileListHandler from "../../lib/getFileList";
+import Window from "../../components/Window";
+import ImageBox from "../../components/ImageBox";
+import TextBox from "../../components/TextBox";
+import PdfBox from "../../components/PdfBox";
+import VideoBox from "../../components/VideoBox";
 
 export default function ListLayer() {
   const [winHeight, setWinHeight] = useState(0);
@@ -301,46 +307,81 @@ export default function ListLayer() {
   //   },
   // ];
 
-  /** 点击进入下一层文件夹 */
-  function enterFolder(value: any) {
-    console.log(value);
-    const { type, name } = value;
-    if (type !== "folder") {
-      return;
-    }
-    const targetRoute = `${fileRoute[fileRoute.length - 1].href}${name}/`;
-    const targetFileRoute = [...fileRoute, { label: name, href: targetRoute }];
-    setFileRoute(targetFileRoute);
-  }
+  // /** 点击进入下一层文件夹 */
+  // function enterFolder(value: any) {
+  //   console.log(value);
+  //   const { type, name } = value;
+  //   if (type !== "folder") {
+  //     return;
+  //   }
+  //   const targetRoute = `${fileRoute[fileRoute.length - 1].href}${name}/`;
+  //   const targetFileRoute = [...fileRoute, { label: name, href: targetRoute }];
+  //   setFileRoute(targetFileRoute);
+  // }
 
   useEffect(() => {
     getFileListHandler(fileRoute, setFileList);
   }, [fileRoute]);
 
-  const ItemList = (item: ItemProps) => (
-    <li
-      className="px-6 py-4 flex felx-row items-center cursor-pointer active:bg-sky-100 "
-      key={item.id}
-    >
-      <div>
-        <IconButton
-          icon={require(`@/assets/icons/${item.iconPath}`)}
-          width={30}
-          height={30}
-          iconSize={30}
-        />
-      </div>
-      <div className="flex flex-col ml-5 text-[12px]">
-        <div className="text-[14px] font-bold">
-          <span>{item.name}</span>
+  const ItemList = (item: ItemProps) => {
+    const [isOpenWindow, setIsOpenWindow] = useState(false);
+
+    /** 点击进入下一层文件夹 */
+    function enterFolder(value: any) {
+      const { type, name } = value;
+      if (type !== "folder") {
+        !isOpenWindow && setIsOpenWindow(true);
+        return;
+      }
+      const targetRoute = `${fileRoute[fileRoute.length - 1].href}${name}/`;
+      const targetFileRoute = [
+        ...fileRoute,
+        { label: name, href: targetRoute },
+      ];
+      setFileRoute(targetFileRoute);
+    }
+
+    return (
+      <li
+        className="px-6 py-4 flex felx-row items-center cursor-pointer active:bg-sky-100 "
+        key={item.id}
+        onClick={enterFolder}
+      >
+        <div>
+          <IconButton
+            icon={require(`@/assets/icons/${item.iconPath}`)}
+            width={30}
+            height={30}
+            iconSize={30}
+          />
         </div>
-        <div>{item.updateTime}</div>
-      </div>
-      <div className="ml-auto">
-        <Checkbox className="rounded-full w-30 h-30" />
-      </div>
-    </li>
-  );
+        <div className="flex flex-col ml-5 text-[12px]">
+          <div className="text-[14px] font-bold">
+            <span>{item.name}</span>
+          </div>
+          <div>{item.updateTime}</div>
+        </div>
+        <div className="ml-auto">
+          <Checkbox className="rounded-full w-30 h-30" />
+        </div>
+        {isOpenWindow &&
+          ReactDOM.createPortal(
+            <Window
+              full={/\.pdf$/i.test(item.name)}
+              title={item.name}
+              isOpen={isOpenWindow}
+              onClose={setIsOpenWindow}
+            >
+              {/\.(jpg|png)$/i.test(item.name) && <ImageBox name={item.name} />}
+              {/\.txt$/i.test(item.name) && <TextBox name={item.name} />}
+              {/\.pdf$/i.test(item.name) && <PdfBox name={item.name} />}
+              {/\.mp4$/i.test(item.name) && <VideoBox name={item.name} />}
+            </Window>,
+            document.body
+          )}
+      </li>
+    );
+  };
 
   const tableItemList = (rowData: any, columns: any) => {
     const colWidth: { [key: string]: string } = {
@@ -359,30 +400,76 @@ export default function ListLayer() {
             <Checkbox className="rounded-full w-30 h-30" />
           </div>
         </td>
-        {columns.map((column: any) => (
-          <td
-            style={{ width: colWidth[column.key] ? colWidth[column.key] : "" }}
-            className={` text-left text-[14px] py-2`}
-            key={rowData.key}
-            onClick={() => enterFolder(rowData)}
-          >
-            <div className={`flex flex-row items-center`}>
-              {column.key === "name" && (
-                <div>
-                  <IconButton
-                    icon={require(`@/assets/icons/${rowData.iconPath}`)}
-                    width={30}
-                    height={30}
-                    iconSize={30}
-                  />
+        {columns.map((column: any) => {
+          const [isOpenWindow, setIsOpenWindow] = useState(false);
+
+          /** 点击进入下一层文件夹 */
+          function enterFolder(value: any) {
+            const { type, name } = value;
+            if (type !== "folder") {
+              !isOpenWindow && setIsOpenWindow(true);
+              return;
+            }
+            const targetRoute = `${
+              fileRoute[fileRoute.length - 1].href
+            }${name}/`;
+            const targetFileRoute = [
+              ...fileRoute,
+              { label: name, href: targetRoute },
+            ];
+            setFileRoute(targetFileRoute);
+          }
+
+          return (
+            <td
+              style={{
+                width: colWidth[column.key] ? colWidth[column.key] : "",
+              }}
+              className={` text-left text-[14px] py-2`}
+              key={rowData.key}
+              onClick={() => enterFolder(rowData)}
+            >
+              <div className={`flex flex-row items-center`}>
+                {column.key === "name" && (
+                  <div>
+                    <IconButton
+                      icon={require(`@/assets/icons/${rowData.iconPath}`)}
+                      width={30}
+                      height={30}
+                      iconSize={30}
+                    />
+                  </div>
+                )}
+                <div className="ml-2">
+                  <span className="text-[12px]">{rowData[column.key]}</span>
                 </div>
-              )}
-              <div className="ml-2">
-                <span className="text-[12px]">{rowData[column.key]}</span>
               </div>
-            </div>
-          </td>
-        ))}
+              {isOpenWindow &&
+                ReactDOM.createPortal(
+                  <Window
+                    full={/\.pdf$/i.test(rowData.name)}
+                    title={rowData.name}
+                    isOpen={isOpenWindow}
+                    onClose={setIsOpenWindow}
+                  >
+                    {/\.(jpg|png)$/i.test(rowData.name) && (
+                      <ImageBox name={rowData.name} />
+                    )}
+                    {/\.txt$/i.test(rowData.name) && (
+                      <TextBox name={rowData.name} />
+                    )}
+                    {/\.pdf$/i.test(rowData.name) && (
+                      <PdfBox name={rowData.name} />
+                    )}
+                    {/\.mp4$/i.test(rowData.name) && (
+                      <VideoBox name={rowData.name} />
+                    )}
+                  </Window>,
+                  document.body
+                )}
+            </td>
+          );
+        })}
       </tr>
     );
   };

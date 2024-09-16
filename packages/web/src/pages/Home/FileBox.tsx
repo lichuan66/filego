@@ -98,7 +98,8 @@ export default function FileBox({
     targetIconPath = `${userApi}/readImg?route=${route}&fileName=${name}&hasSuolue=${1}&username=${getToken()}`;
   }
 
-  const changeModeType = function (name: string, key: string) {
+  const changeModeType = function (name: string, key: string, event: any) {
+    event.stopPropagation();
     if (key === "1") {
       setNeedDeleteId([name]);
       setIsOpenDelete(true);
@@ -201,7 +202,9 @@ export default function FileBox({
                     trigger={["hover"]}
                     overlay={
                       <MenuContent
-                        onClick={({ key }) => changeModeType(name, key)}
+                        onClick={({ key, domEvent }) =>
+                          changeModeType(name, key, domEvent)
+                        }
                       />
                     }
                     // animation="slide-up"

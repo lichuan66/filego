@@ -15,10 +15,13 @@ const initialState: UserState = {
 
 export const userSlice = createSlice({
   name: "user",
-  initialState,
+  initialState: localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user") as string)
+    : initialState,
   reducers: {
     setUserInfo(state, action) {
       const { user } = action.payload;
+      localStorage.setItem("user", JSON.stringify(user));
       Object.keys(user).forEach((key) => {
         //@ts-ignore
         state[key] = user[key];
