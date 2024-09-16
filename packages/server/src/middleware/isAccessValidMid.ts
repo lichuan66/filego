@@ -21,6 +21,7 @@ export default function () {
 
     if (!req.url.startsWith("/api")) {
       res.sendFile(path.join(__dirname + "../../public/index.html"));
+      return;
     }
 
     if (routeSet.has(req.path)) {
