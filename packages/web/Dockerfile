@@ -7,7 +7,7 @@ COPY package.json ./package.json
 RUN npm install -g pnpm
 
 # 构建应用
-RUN pnpm run build
+RUN npm run build
 
 FROM nginx:alpine
 
