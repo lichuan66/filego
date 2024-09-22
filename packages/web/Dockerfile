@@ -11,6 +11,6 @@
 
 FROM nginx:alpine
 
-ADD ./packages/web/dist/filego/ /usr/share/nginx/html
+ADD ./dist/filego/ /usr/share/nginx/html
 
 EXPOSE 80
