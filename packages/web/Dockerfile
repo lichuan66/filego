@@ -11,6 +11,14 @@
 
 FROM nginx:alpine
 
+RUN npm install -g pnpm
+
+RUN pnpm install
+
+RUN npm run build
+
+RUN ls
+
 ADD ./dist/filego/ /usr/share/nginx/html
 
 EXPOSE 80
