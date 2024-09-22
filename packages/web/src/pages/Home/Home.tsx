@@ -14,7 +14,7 @@ export interface modeType {
 }
 
 export default function Home() {
-  console.log(1112223334444555);
+  console.log(111222);
 
   const pageType = usePageType();
   const [modeTypeIndex, setModeTypeIndex] = useState("1");
