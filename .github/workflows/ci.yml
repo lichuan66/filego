@@ -63,6 +63,8 @@ jobs:
       - name: Build and push web image
         run: |
           cd ./packages/web
+          pnpm install
+          npm run build
           ls
           ls ./dist
           # npm install --force
