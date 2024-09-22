@@ -11,7 +11,7 @@ RUN pnpm run build
 
 FROM nginx:alpine
 
-ADD ./dist/filego/ /usr/share/nginx/html/nrp-web/
+ADD ./dist/filego/ /usr/share/nginx/html
 
 EXPOSE 80
 
