@@ -10,6 +10,7 @@ RUN touch .env
 RUN npm install -g pnpm
 
 RUN npm install pm2 -g
+RUN npm install -g bun
 
 RUN pnpm install
 
