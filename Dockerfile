@@ -9,8 +9,12 @@ RUN touch .env
 # 安装 pnpm
 RUN npm install -g pnpm
 
+RUN npm install pm2 -g
+
 RUN pnpm install
 
-RUN npm run build
+# RUN npm run build
 
-CMD npm run dev:server
+# CMD npm run dev:server
+
+CMD ["pm2", "start", "/usr/app/filego/packages/server/src/main.ts", "--no-daemon"]
