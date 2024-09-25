@@ -142,6 +142,12 @@ export default function Base() {
           })}
         </div>
       </div>
+      <div className="absolute bottom-2 text-[14px]">
+        <span className="mr-2">ICP备案号:</span>
+        <a href="https://beian.miit.gov.cn/" target="_blank">
+          粤ICP备2024309506号-2
+        </a>
+      </div>
     </div>
   );
 }
