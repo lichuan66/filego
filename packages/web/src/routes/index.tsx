@@ -5,6 +5,7 @@ import Register from "../pages/LoginSignup/Register";
 import Layout from "../pages/Layout/Layout";
 import Home from "../pages/Home/Home";
 import Aigpt from "../pages/Aigpt/Aigpt";
+import Im from "../pages/Im/Im";
 
 const routes: RouteObject[] = [
   {
@@ -26,6 +27,10 @@ const routes: RouteObject[] = [
       {
         path: "aigpt",
         element: <Aigpt />,
+      },
+      {
+        path: "im",
+        element: <Im />,
       },
       {
         index: true, // 表示这是默认的子路由
