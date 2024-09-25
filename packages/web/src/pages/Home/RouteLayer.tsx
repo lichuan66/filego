@@ -4,6 +4,7 @@ import Dropdown from "../../components/Dropdown";
 import { Menu, MenuItem } from "../../components/Menu";
 import IconButton from "../../components/IconButton";
 import { useFileRoute } from "../../hook/useFile";
+import { usePageType } from "../../hook/usePage";
 import type { modeType } from "./Home";
 
 interface MenuInfo {
@@ -29,6 +30,7 @@ export default function RouteLayer({
   const duigouIconPath = require("@/assets/icons/duigou.svg");
 
   const fileRoute = useFileRoute();
+  const pageType = usePageType();
 
   const changeModeType = function ({ key }: MenuInfo) {
     setModeTypeIndex(key);
@@ -66,24 +68,26 @@ export default function RouteLayer({
       <div>
         <Breadcrumb items={fileRoute} />
       </div>
-      <div>
-        <Dropdown
-          trigger={["hover"]}
-          overlay={menu}
-          animation="slide-up"
-          alignPoint
-        >
-          <button>
-            <IconButton
-              icon={moshiIconPath}
-              width={18}
-              height={18}
-              iconSize={18}
-              className="cursor-pointer"
-            />
-          </button>
-        </Dropdown>
-      </div>
+      {pageType === "web" && (
+        <div>
+          <Dropdown
+            trigger={["hover"]}
+            overlay={menu}
+            animation="slide-up"
+            alignPoint
+          >
+            <button>
+              <IconButton
+                icon={moshiIconPath}
+                width={18}
+                height={18}
+                iconSize={18}
+                className="cursor-pointer"
+              />
+            </button>
+          </Dropdown>
+        </div>
+      )}
     </div>
   );
 }

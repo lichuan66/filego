@@ -14,10 +14,9 @@ export interface modeType {
 }
 
 export default function Home() {
-  console.log(111222333);
-
   const pageType = usePageType();
-  const [modeTypeIndex, setModeTypeIndex] = useState("1");
+  const initIndex = pageType === "web" ? "1" : "2";
+  const [modeTypeIndex, setModeTypeIndex] = useState(initIndex);
 
   const duigouIconPath = require("@/assets/icons/duigou.svg");
 

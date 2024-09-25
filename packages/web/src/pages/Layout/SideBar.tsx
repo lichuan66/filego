@@ -68,7 +68,7 @@ function AvatarSetting({
           <Avatar
             className="cursor-pointer"
             size={40}
-            src={`http://${config.Server}${avatarPath}`}
+            src={`http://${config.ServerPublic}${avatarPath}`}
             onClick={() => {}}
           />
         </div>
@@ -100,6 +100,7 @@ function AvatarSetting({
 export default function Sidebar() {
   const wenjianIconPath = require("@/assets/icons/wenjian.svg");
   const duihuaIconPath = require("@/assets/icons/duihua.svg");
+  const groupIconPath = require("@/assets/icons/group.svg");
 
   const fankuiIconPath = require("@/assets/icons/fankui.svg");
   const youjianIconPath = require("@/assets/icons/youjian.svg");
@@ -126,6 +127,13 @@ export default function Sidebar() {
     },
     {
       index: 2,
+      name: "消息",
+      iconPath: groupIconPath,
+      route: "/im",
+      onClick: setSubRouteIndex,
+    },
+    {
+      index: 3,
       name: "对话",
       iconPath: duihuaIconPath,
       route: "/aigpt",
@@ -135,28 +143,28 @@ export default function Sidebar() {
 
   const avatarSettingButtonList = [
     {
-      index: 3,
+      index: 4,
       name: "我要反馈",
       iconPath: fankuiIconPath,
       route: "/home",
       onClick: setSubRouteIndex,
     },
     {
-      index: 4,
+      index: 5,
       name: "联系我们",
       iconPath: youjianIconPath,
       route: "/aigpt",
       onClick: setSubRouteIndex,
     },
     {
-      index: 5,
+      index: 6,
       name: "关于filego",
       iconPath: guanyuIconPath,
       route: "https://github.com/lichuan66/filego",
       onClick: setSubRouteIndex,
     },
     {
-      index: 6,
+      index: 7,
       name: "退出登录",
       iconPath: exitIconPath,
       route: "/login",
@@ -211,7 +219,7 @@ export default function Sidebar() {
         >
           <Avatar
             className="cursor-pointer"
-            src={`http://${config.Server}${avatar}`}
+            src={`http://${config.ServerPublic}${avatar}`}
             onClick={() => {}}
           />
         </Dropdown>
