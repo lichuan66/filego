@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "target": "esnext",
+    // "module": "esnext",
     "jsx": "preserve",
     "moduleResolution": "node",
     "strict": true,
@@ -12,7 +13,9 @@
     "noEmit": true,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost", "WebWorker"],
+    "allowJs": false
   },
   "include": [
     "packages/**/*.ts",

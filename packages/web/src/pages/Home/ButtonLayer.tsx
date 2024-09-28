@@ -8,6 +8,7 @@ import Modal from "../../components/Modal";
 import Message from "../../components/Message";
 import useAction from "../../hook/useAction";
 import getFileListHandler from "../../lib/getFileList";
+import sliceFile from "../../lib/sliceFile";
 
 export default function ButtonLayer() {
   const uploadIconPath = require("@/assets/icons/shangchuan.svg");
@@ -61,13 +62,18 @@ export default function ButtonLayer() {
         formData.append("route", route);
         formData.append("fileName", file.name);
 
-        try {
-          await uploadFile(formData);
-          getFileListHandler(fileRoute, setFileList);
-          Message.success("文件上传成功");
-        } catch (error: any) {
-          Message.error(error.message);
-        }
+        console.time("sliceFile");
+        const chunks = await sliceFile(file);
+        console.timeEnd("sliceFile");
+        console.log(chunks);
+
+        // try {
+        //   await uploadFile(formData);
+        //   getFileListHandler(fileRoute, setFileList);
+        //   Message.success("文件上传成功");
+        // } catch (error: any) {
+        //   Message.error(error.message);
+        // }
 
         btn?.removeEventListener("change", handleFileChange);
       }
