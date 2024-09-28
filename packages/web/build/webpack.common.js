@@ -71,6 +71,11 @@ module.exports = {
           esModule: false,
         },
       },
+      // {
+      //   test: /\.worker\.(js|jsx|ts|tsx)$/,
+      //   exclude: /node_modules/,
+      //   use: ["worker-loader"],
+      // },
     ],
   },
   plugins: [

@@ -8,6 +8,7 @@ import { login } from "@/api/user";
 import Message from "../../components/Message";
 import useAction from "../../hook/useAction";
 import { setToken } from "../../api/auth";
+import { usePageType } from "../../hook/usePage";
 
 type FuncButtonProps = {
   name: string;
@@ -36,13 +37,25 @@ export default function Base() {
   const userIconPath = require("@/assets/icons/user.svg");
   const plusIconPath = require("@/assets/icons/plus.svg");
   const more = require("@/assets/icons/more.svg");
+  const bgUrl = require("../../assets/images/bg.jpg");
 
   const navigate = useNavigate();
   const { setUserInfo, setFileRoute } = useAction();
+  const pageType = usePageType();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSmallerThan768, setIsSmallerThan768] = useState(false);
+
+  const bgStyles =
+    pageType === "web"
+      ? {
+          backgroundImage: `url(${bgUrl})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          height: "100vh", // 设置高度以适应你的需求
+        }
+      : {};
 
   const FuncButtonList: FuncButtonProps[] = [
     {
@@ -107,13 +120,14 @@ export default function Base() {
 
   return (
     <div
-      className={`h-full md:bg-rose-500 ${
+      className={`h-full  ${
         isSmallerThan768 ? "" : "flex justify-center items-center"
       } `}
+      style={bgStyles}
     >
       <div
         className={`relative w-[360px] h-[500px]
-        bg-white rounded-lg md:w-[600px] md:h-[500px]
+        bg-white md:bg-opacity-70 md:filter-[10px] md:shadow-md rounded-lg md:w-[600px] md:h-[500px]
       flex flex-col justify-start px-5 md:px-24 ${
         isSmallerThan768 ? "top-[50px] mx-auto" : ""
       }`}
@@ -153,12 +167,6 @@ export default function Base() {
             );
           })}
         </div>
-      </div>
-      <div className="absolute bottom-2 text-[14px]">
-        <span className="mr-2">ICP备案号:</span>
-        <a href="https://beian.miit.gov.cn/" target="_blank">
-          粤ICP备2024309506号-2
-        </a>
       </div>
     </div>
   );
