@@ -1,7 +1,6 @@
 import config from "@filego/config/server";
 import logger from "@filego/utils/logger";
 import User from "@filego/database/mongoose/models/user";
-import path from "path";
 
 const ROUTES = [
   "/api/user/login",
@@ -17,11 +16,10 @@ const routeSet = new Set(ROUTES);
 
 export default function () {
   return async (req: any, res: any, next: any) => {
-    console.log("req.path ===>", req.path);
+    // console.log("req.path ===>", req.path);
 
-    if (req.url.startsWith("/client")) {
-      console.log(path.join(__dirname + "../../../public/index.html"), 1234);
-      res.sendFile(path.join(__dirname + "../../../public/index.html"));
+    if (req.url.startsWith("/socket.io")) {
+      next();
       return;
     }
 

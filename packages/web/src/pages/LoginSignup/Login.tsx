@@ -4,7 +4,8 @@ import Input from "../../components/Input";
 import IconButton from "../../components/IconButton";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "@/api/user";
+// import { login } from "@/api/user";
+import { login } from "../../api/service";
 import Message from "../../components/Message";
 import useAction from "../../hook/useAction";
 import { setToken } from "../../api/auth";
@@ -90,17 +91,17 @@ export default function Base() {
 
   async function loginHandler() {
     try {
-      const res = await login(username, password);
-      setUserInfo({
-        _id: res._id,
-        username: res.username,
-        avatar: res.avatar,
-      });
-      setToken(res.token);
-      setUsername("");
-      setPassword("");
-      Message.success("登录成功");
-      gotoHome();
+      const user = await login(username, password);
+      console.log(user);
+
+      if (user) {
+        setUserInfo(user);
+        setToken(user.token);
+        setUsername("");
+        setPassword("");
+        Message.success("登录成功");
+        gotoHome();
+      }
     } catch (error: any) {
       console.error(error.message);
       Message.error(error.message);
@@ -141,6 +142,7 @@ export default function Base() {
           placeholder="请输入用户名"
           value={username}
           onChange={setUsername}
+          onEnter={loginHandler}
         />
         <Input
           className="h-[54px]  mt-5"
@@ -148,6 +150,7 @@ export default function Base() {
           placeholder="请输入密码"
           value={password}
           onChange={setPassword}
+          onEnter={loginHandler}
         />
         <Button
           className="mt-10 mx-auto rounded-xl w-48"

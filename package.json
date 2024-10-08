@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev:web": "pnpm --filter @filego/web dev",
+    "dev:client": "pnpm --filter @filego/client dev",
     "dev:server": "pnpm --filter @filego/server dev",
     "build": "pnpm -r build"
   },

@@ -111,7 +111,7 @@ export default function Sidebar() {
 
   const navigate = useNavigate();
 
-  const [subRouteIndex, setSubRouteIndex] = useState(1);
+  const [subRouteIndex, setSubRouteIndex] = useState(2);
 
   const avatar = useAvatar();
 

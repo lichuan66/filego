@@ -15,7 +15,8 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "lib": ["esnext", "dom", "dom.iterable", "scripthost", "WebWorker"],
-    "allowJs": false
+    "allowJs": false,
+    
   },
   "include": [
     "packages/**/*.ts",

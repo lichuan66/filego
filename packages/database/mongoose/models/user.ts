@@ -5,6 +5,7 @@ const UserSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  lastLoginTime: { type: Date, default: Date.now },
   username: {
     type: String,
     require: true,
@@ -20,6 +21,7 @@ const UserSchema = new Schema({
   password: String,
   salt: String,
   avatar: String,
+  lastLoginIp: String,
 });
 
 export interface UserDocument extends Document {
@@ -29,8 +31,10 @@ export interface UserDocument extends Document {
   salt: string;
   avatar: string;
   createTime: Date;
+  lastLoginTime: Date;
+  lastLoginIp: string;
 }
 
-const User = model<UserDocument>("user", UserSchema);
+const User = model<UserDocument>("User", UserSchema);
 
 export default User;

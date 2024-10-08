@@ -4,11 +4,12 @@ import Input from "../../components/Input";
 import IconButton from "../../components/IconButton";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "@/api/user";
+// import { register } from "@/api/user";
 import Message from "../../components/Message";
 import useAction from "../../hook/useAction";
 import { setToken } from "../../api/auth";
 import { usePageType } from "../../hook/usePage";
+import { register } from "../../api/service";
 
 type FuncButtonProps = {
   name: string;
@@ -78,17 +79,16 @@ export default function Base() {
 
   async function registerHandler() {
     try {
-      const res: any = await register(username, password);
-      setUserInfo({
-        _id: res._id,
-        username: res.username,
-        avatar: res.avatar,
-      });
-      setToken(res.token);
-      setUsername("");
-      setPassword("");
-      Message.success("注册成功");
-      gotoHome();
+      const user: any = await register(username, password);
+      console.log("user ===>", user);
+      if (user) {
+        setUserInfo(user);
+        setToken(user.token);
+        setUsername("");
+        setPassword("");
+        Message.success("注册成功");
+        gotoHome();
+      }
     } catch (error: any) {
       console.error(error.message);
       Message.error(error.message);
@@ -129,6 +129,7 @@ export default function Base() {
           placeholder="请输入用户名"
           value={username}
           onChange={setUsername}
+          onEnter={registerHandler}
         />
         <Input
           className="h-[54px]  mt-5"
@@ -136,6 +137,7 @@ export default function Base() {
           placeholder="请输入密码"
           value={password}
           onChange={setPassword}
+          onEnter={registerHandler}
         />
         <Button
           className="mt-10 mx-auto rounded-xl w-48 active:bg-[#ccc]"

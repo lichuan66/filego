@@ -45,7 +45,8 @@ export default function Input({
   function handleKeyDown(e: any) {
     if (e.key === "Enter") {
       // @ts-ignore
-      $input.current.blur();
+      // $input.current.blur();
+      onEnter(value as string);
     }
   }
 

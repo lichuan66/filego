@@ -62,18 +62,18 @@ export default function ButtonLayer() {
         formData.append("route", route);
         formData.append("fileName", file.name);
 
-        console.time("sliceFile");
-        const chunks = await sliceFile(file);
-        console.timeEnd("sliceFile");
-        console.log(chunks);
+        // console.time("sliceFile");
+        // const chunks = await sliceFile(file);
+        // console.timeEnd("sliceFile");
+        // console.log(chunks);
 
-        // try {
-        //   await uploadFile(formData);
-        //   getFileListHandler(fileRoute, setFileList);
-        //   Message.success("文件上传成功");
-        // } catch (error: any) {
-        //   Message.error(error.message);
-        // }
+        try {
+          await uploadFile(formData);
+          getFileListHandler(fileRoute, setFileList);
+          Message.success("文件上传成功");
+        } catch (error: any) {
+          Message.error(error.message);
+        }
 
         btn?.removeEventListener("change", handleFileChange);
       }

@@ -1,13 +1,14 @@
 import { Request, Response } from "express";
 import logger from "@filego/utils/logger";
 import User from "@filego/database/mongoose/models/user";
-import assert from "assert";
+import assert, { AssertionError } from "assert";
 import jwt from "jsonwebtoken";
 import config from "@filego/config/server";
 import bcrypt from "bcryptjs";
 import getRandomAvatar from "@filego/utils/getRandomAvatar";
 import path from "path";
 import { createFolder } from "../../../utils/fileHandler";
+import Group from "@filego/database/mongoose/models/group";
 
 enum ERROR_TYPE {
   USERNAME_NOTFOUND = "用户名不能为空",
@@ -36,6 +37,11 @@ export async function userCreate(req: Request, res: Response) {
     const salt = await bcrypt.genSalt(config.SALT_ROUNDS);
     const hash = await bcrypt.hash(password, salt);
 
+    const defaultGroup = await Group.findOne({ isDefault: true });
+    if (!defaultGroup) {
+      throw new AssertionError({ message: "默认群组不存在" });
+    }
+
     const newUser = await User.create({
       username,
       hash,
@@ -52,6 +58,12 @@ export async function userCreate(req: Request, res: Response) {
       (newUser._id as string).toString()
     );
     createFolder(folderPath);
+
+    if (!defaultGroup.creator) {
+      defaultGroup.creator = newUser._id as string;
+    }
+    defaultGroup.members.push(newUser._id as string);
+    await defaultGroup.save();
 
     const token = generateToken((newUser._id as string).toString());
 

@@ -5,10 +5,17 @@ import {
   setWidthAndHeight,
   setSiderBarOpen,
 } from "../store/reducers/pageSlice";
-import { setUserInfo } from "../store/reducers/userSlcie";
-import { UserState } from "../store/reducers/userSlcie";
+import {
+  setUserInfo,
+  setFocus,
+  setLinkmanProperty,
+  addLinkmanMessage,
+  deleteMessage,
+  updateMessage,
+} from "../store/reducers/userSlice";
 import { setFileRoute, setFileList } from "../store/reducers/fileSlice";
 import type { FileRouterType, FileType } from "../store/reducers/fileSlice";
+import type { Message } from "../types/user";
 
 export default function useAction() {
   const dispatch = useDispatch();
@@ -23,7 +30,7 @@ export default function useAction() {
     setSiderBarOpen(status: boolean) {
       dispatch(setSiderBarOpen({ status }));
     },
-    setUserInfo(user: UserState) {
+    setUserInfo(user: any) {
       dispatch(setUserInfo({ user }));
     },
     setFileRoute(fileRoute: FileRouterType[]) {
@@ -31,6 +38,21 @@ export default function useAction() {
     },
     setFileList(fileList: FileType[]) {
       dispatch(setFileList({ fileList }));
+    },
+    setFocus(focusId: string) {
+      dispatch(setFocus({ focusId }));
+    },
+    setLinkmanProperty(linkmanId: string, key: string, value: any) {
+      dispatch(setLinkmanProperty({ linkmanId, key, value }));
+    },
+    addLinkmanMessage(linkmanId: string, message: Message) {
+      dispatch(addLinkmanMessage({ linkmanId, message }));
+    },
+    deleteMessage(linkmanId: string, messageId: string) {
+      dispatch(deleteMessage({ linkmanId, messageId }));
+    },
+    updateMessage(linkmanId: string, messageId: string, value: any) {
+      dispatch(updateMessage({ linkmanId, messageId, value }));
     },
   };
 }

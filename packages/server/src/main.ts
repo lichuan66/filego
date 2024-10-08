@@ -9,8 +9,28 @@ import config from "@filego/config/server";
 import isAccessValidMid from "./middleware/isAccessValidMid";
 import bodyParser from "body-parser";
 import fs from "fs";
+import { Server } from "socket.io";
+import http from "http";
+import logger from "@filego/utils/logger";
+import { getSocketIp } from "@filego/utils/getSocketIp";
+import * as userSocketRoutes from "./routes/socket/user";
+import * as groupSocketRoutes from "./routes/socket/group";
+import registerRoute from "./middleware/registerRoute";
+import Group from "@filego/database/mongoose/models/group";
+import getRandomAvatar from "@filego/utils/getRandomAvatar";
+import Socket from "@filego/database/mongoose/models/socket";
 
 const app = express();
+
+const httpServer = http.createServer(app);
+const io = new Server(httpServer, {
+  cors: {
+    origin: "*",
+    credentials: true,
+  },
+  pingTimeout: 10000,
+  pingInterval: 5000,
+});
 
 type routeListType = [string, Router][];
 
@@ -21,6 +41,44 @@ const routesPath: routeListType = [
 
 (async () => {
   await initMongoDB();
+
+  // 判断默认group是否存在
+  const defaultGroup = await Group.findOne({ isDefault: true });
+  if (!defaultGroup) {
+    const defaultGroup = await Group.create({
+      name: "filego",
+      avatar: getRandomAvatar(),
+      isDefault: true,
+    });
+
+    if (!defaultGroup) {
+      logger.error("[defaultGroup]", "create default group fail");
+      return process.exit(1);
+    }
+  }
+
+  const routes = {
+    ...userSocketRoutes,
+    ...groupSocketRoutes,
+  };
+
+  io.on("connection", async (socket) => {
+    const ip = getSocketIp(socket);
+    logger.trace(`connection ${socket.id} ${ip}`);
+    await Socket.create({
+      id: socket.id,
+      ip: ip,
+    });
+
+    socket.on("disconnect", async () => {
+      logger.trace(`disconnect ${socket.id}`);
+      await Socket.deleteOne({
+        id: socket.id,
+      });
+    });
+
+    socket.use(registerRoute(socket, routes));
+  });
 
   const storePath = path.join(__dirname, "./store");
   if (!fs.existsSync(storePath)) {
@@ -39,7 +97,7 @@ const routesPath: routeListType = [
     app.use(routes[0], routes[1]);
   });
 
-  app.listen(config.port, () => {
+  httpServer.listen(config.port, () => {
     console.log(`Server running at http://localhost:${config.port}`);
   });
 })();
