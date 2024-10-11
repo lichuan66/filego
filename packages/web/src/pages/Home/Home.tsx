@@ -20,8 +20,6 @@ export default function Home() {
 
   const duigouIconPath = require("@/assets/icons/duigou.svg");
 
-  console.log(111);
-
   const modeTypeList: modeType[] = [
     {
       index: "1",

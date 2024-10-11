@@ -28,6 +28,7 @@ async function getGroupOnlineMembersHelper(group: GroupDocument) {
     }
     return result;
   }, new Map());
+
   return Array.from(filterSockets.values());
 }
 

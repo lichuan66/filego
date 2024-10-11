@@ -140,6 +140,8 @@ export async function userLogin(
   );
 
   groups.forEach((group) => {
+    console.log(group._id, 12345);
+
     ctx.socket.join((group._id as string).toString());
   });
 

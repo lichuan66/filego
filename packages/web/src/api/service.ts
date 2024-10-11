@@ -33,7 +33,6 @@ export const getGroupOnlineMembers = (() => {
       groupId: groupId,
       cache: cache.groupId === groupId ? cache.key : undefined,
     });
-    console.log("_getGroupOnlineMembers ===>", result);
 
     if (!result) return [];
     if (result.cache === cache.key) {

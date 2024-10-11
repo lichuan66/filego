@@ -7,8 +7,6 @@ export default function LinkmanList() {
   const list = [1, 2, 34, 5, 6, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   const linkmans = useLinkmans();
 
-  console.log("linkmans ===>", linkmans);
-
   function renderLinkman(linkman: Linkman) {
     const messages = Object.values(linkman.messages);
     const lastMessage =
