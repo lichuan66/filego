@@ -92,7 +92,6 @@ export default function Base() {
   async function loginHandler() {
     try {
       const user = await login(username, password);
-      console.log(user);
 
       if (user) {
         setUserInfo(user);

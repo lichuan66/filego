@@ -4,6 +4,7 @@ const MessageSchema = new Schema({
   createTime: {
     type: Date,
     default: Date.now,
+    index: true,
   },
   from: {
     type: Schema.Types.ObjectId,

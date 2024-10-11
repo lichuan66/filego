@@ -96,6 +96,8 @@ export const userSlice = createSlice({
       if (targetLinkman) {
         let messages = {};
         if (value._id) {
+          delete targetLinkman.messages[messageId];
+
           messages = {
             ...targetLinkman.messages,
             [value._id]: value,
@@ -103,7 +105,10 @@ export const userSlice = createSlice({
         } else {
           messages = {
             ...targetLinkman.messages,
-            [messageId]: value,
+            [messageId]: {
+              ...targetLinkman.message[messageId],
+              ...value,
+            },
           };
         }
         targetLinkman.messages = messages;

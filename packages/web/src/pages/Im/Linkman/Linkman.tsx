@@ -49,7 +49,9 @@ export default function Linkman(props: LinkmanProp) {
           <p>{formatTime()}</p>
         </div>
         <div className=" text-[16px] text-gray-500">
-          <p>{preview}</p>
+          <p className="w-[200px] overflow-hidden text-ellipsis whitespace-nowrap">
+            {preview}
+          </p>
           {unread > 0 && (
             <div>
               <span>{unread > 99 ? "99+" : unread}</span>

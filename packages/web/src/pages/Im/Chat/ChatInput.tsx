@@ -28,7 +28,7 @@ export default function ChatInput() {
       _id,
       type,
       content,
-      createTime: `${Date.now()}`,
+      createTime: new Date(),
       from: {
         _id: selfId,
         username,
@@ -39,7 +39,6 @@ export default function ChatInput() {
       loading: true,
       percent: type === "image" || type === "file" ? 0 : 100,
     };
-    console.log("message ===>", message);
 
     addLinkmanMessage(focusId, message);
     return _id;
@@ -55,7 +54,7 @@ export default function ChatInput() {
     if (err) {
       deleteMessage(linkmanId, localId);
     } else {
-      message.loading = true;
+      message.loading = false;
       updateMessage(linkmanId, localId, message);
     }
   }
@@ -67,7 +66,7 @@ export default function ChatInput() {
       return null;
     }
     const id = addSelfMessage("text", message);
-    // handleSendMessage(id, "text", message);
+    handleSendMessage(id, "text", message);
 
     // @ts-ignore
     inputRef.current.value = "";

@@ -20,7 +20,6 @@ export default function Chat() {
     if (Array.isArray(onlineMembers)) {
       setLinkmanProperty(focusId, "onlineMembers", onlineMembers);
     }
-    console.log("onlineMembers ===>", onlineMembers);
   }
 
   useEffect(() => {

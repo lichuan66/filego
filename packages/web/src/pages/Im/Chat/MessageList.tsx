@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import useAction from "../../../hook/useAction";
 import { useFocus, useSelfId, useLinkmans } from "../../../hook/useUser";
 import { Message } from "../../../types/user";
@@ -13,7 +13,9 @@ export default function MessageList() {
   const messages = linkman.messages as Message;
   const unread = linkman.unread;
 
-  console.log("messages ===>", messages);
+  const [divWidth, setDivWidth] = useState(0);
+
+  const divRef = useRef<HTMLDivElement>(null);
 
   function renderMessage(message: Message) {
     const isSelf = selfId === message.from._id;
@@ -29,12 +31,33 @@ export default function MessageList() {
         time={message.createTime}
         username={message.from.username}
         content={message.content}
+        maxContent={`${divWidth}px`}
       />
     );
   }
 
+  function handleResize() {
+    requestAnimationFrame(() => {
+      // @ts-ignore
+      const height = divRef.current.clientWidth - 200;
+      if (height) {
+        setDivWidth(height);
+      }
+    });
+  }
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    // 清理函数，移除监听器
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div className="w-full flex-auto">
+    <div className="w-full flex-auto px-2 py-5" ref={divRef}>
       {Object.values(messages).map((message) => {
         return renderMessage(message);
       })}

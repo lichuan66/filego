@@ -15,6 +15,7 @@ import logger from "@filego/utils/logger";
 import { getSocketIp } from "@filego/utils/getSocketIp";
 import * as userSocketRoutes from "./routes/socket/user";
 import * as groupSocketRoutes from "./routes/socket/group";
+import * as messageSocketRoutes from "./routes/socket/message";
 import registerRoute from "./middleware/registerRoute";
 import Group from "@filego/database/mongoose/models/group";
 import getRandomAvatar from "@filego/utils/getRandomAvatar";
@@ -60,6 +61,7 @@ const routesPath: routeListType = [
   const routes = {
     ...userSocketRoutes,
     ...groupSocketRoutes,
+    ...messageSocketRoutes,
   };
 
   io.on("connection", async (socket) => {
