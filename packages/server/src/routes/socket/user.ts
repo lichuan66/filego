@@ -7,8 +7,10 @@ import bcrypt from "bcryptjs";
 import getRandomAvatar from "@filego/utils/getRandomAvatar";
 import path from "path";
 import { createFolder } from "../../utils/fileHandler";
-import Group from "@filego/database/mongoose/models/group";
+import Group, { GroupDocument } from "@filego/database/mongoose/models/group";
 import Socket from "@filego/database/mongoose/models/socket";
+import { isValidObjectId } from "mongoose";
+import Friend from "@filego/database/mongoose/models/friend";
 
 enum ERROR_TYPE {
   USERNAME_NOTFOUND = "用户名不能为空",
@@ -26,6 +28,11 @@ function generateToken(userId: string) {
   );
 }
 
+/**
+ * 用户注册
+ * @param ctx
+ * @returns
+ */
 export async function register(
   ctx: Context<{ username: string; password: string }>
 ) {
@@ -96,6 +103,11 @@ export async function register(
   };
 }
 
+/**
+ * 用户登陆
+ * @param ctx
+ * @returns
+ */
 export async function userLogin(
   ctx: Context<{ username: string; password: string }>
 ) {
@@ -140,8 +152,6 @@ export async function userLogin(
   );
 
   groups.forEach((group) => {
-    console.log(group._id, 12345);
-
     ctx.socket.join((group._id as string).toString());
   });
 
@@ -166,3 +176,134 @@ export async function userLogin(
     notificationTokens: [],
   };
 }
+
+export async function loginByToken(ctx: Context<{ token: string }>) {
+  const { token } = ctx.data;
+  assert(token, "token不能为空");
+
+  let payload: any = null;
+  try {
+    payload = jwt.verify(token, config.jwtSecret);
+  } catch (error) {
+    return "非法token";
+  }
+
+  assert(Date.now() < payload.exp * 1000, "token已过期");
+
+  const user = await User.findOne(
+    {
+      _id: payload.userId,
+    },
+    {
+      _id: 1,
+      avatar: 1,
+      username: 1,
+      tag: 1,
+      createTime: 1,
+    }
+  );
+  if (!user) {
+    throw new AssertionError({ message: "用户不存在" });
+  }
+
+  user.lastLoginTime = new Date();
+  user.lastLoginIp = ctx.socket.ip;
+  await user.save();
+
+  const groups = await Group.find(
+    {
+      members: user._id,
+    },
+    {
+      _id: 1,
+      name: 1,
+      avatar: 1,
+      creator: 1,
+      createTime: 1,
+    }
+  );
+
+  groups.forEach((group: GroupDocument) => {
+    ctx.socket.join((group._id as string).toString());
+  });
+
+  const friends = await Friend.find({ from: user._id }).populate("to", {
+    avatar: 1,
+    username: 1,
+  });
+
+  ctx.socket.user = (user._id as string).toString();
+  await Socket.updateMany(
+    {
+      id: ctx.socket.id,
+    },
+    {
+      user: user._id,
+    }
+  );
+
+  console.log("token 登陆成功");
+
+  return {
+    _id: user._id,
+    username: user.username,
+    avatar: user.avatar,
+    groups,
+    friends,
+  };
+}
+
+/**
+ * 添加好友
+ * @param ctx
+ * @returns
+ */
+export async function addFriend(ctx: Context<{ userId: string }>) {
+  const { userId } = ctx.data;
+  assert(isValidObjectId(userId), "无效的用户Id");
+  assert(ctx.socket.user !== userId, "不能添加自己为好友");
+
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new AssertionError({ message: "添加好友失败，用户不存在" });
+  }
+
+  const friend = await Friend.find({ from: ctx.socket.user, to: user._id });
+  assert(friend.length === 0, "你们已经是好朋友了");
+
+  const newFriend = await Friend.create({
+    from: ctx.socket.user,
+    to: user._id,
+  });
+
+  return {
+    _id: user._id,
+    username: user.username,
+    avatar: user.avatar,
+    from: newFriend.from,
+    to: newFriend.to,
+  };
+}
+
+const UserOnlineStatusCacheExpireTime = 1000 * 60;
+function getUserOnlineStatusWrapper() {
+  const cache: Record<string, { value: boolean; expireTime: number }> = {};
+  return async function getUserOnlineStatus(ctx: Context<{ userId: string }>) {
+    const { userId } = ctx.data;
+    assert(userId, "userId不能为空");
+    assert(isValidObjectId(userId), "不合法的userId");
+
+    if (cache[userId] && cache[userId].expireTime > Date.now()) {
+      return { isOnline: cache[userId].value };
+    }
+
+    const sockets = await Socket.find({ user: userId });
+    const isOnline = sockets.length > 0;
+    cache[userId] = {
+      value: isOnline,
+      expireTime: Date.now() + UserOnlineStatusCacheExpireTime,
+    };
+    return { isOnline };
+  };
+}
+export const getUserOnlineStatus = getUserOnlineStatusWrapper;

@@ -3,7 +3,8 @@ import React, { useState } from "react";
 type ModalProps = {
   isOpen: boolean;
   title: string;
-  showHeader: boolean;
+  showHeader?: boolean;
+  showBottom?: boolean;
   onClose: (val: boolean) => void;
   onOk?: () => void;
   children?: React.ReactNode;
@@ -16,6 +17,7 @@ export default function Modal({
   children,
   title = "",
   showHeader = false,
+  showBottom = true,
 }: ModalProps) {
   if (!isOpen) return null;
 
@@ -43,23 +45,25 @@ export default function Modal({
             <span>{title}</span>
           </header>
         )}
-        <section className="min-h-[150px] py-4 flex justify-center items-center">
+        <section className="min-h-[150px] py-4 px-4 flex justify-center items-center">
           {children}
         </section>
-        <footer className="flex flex-row justify-center items-center px-2 py-4 pb-[40px]">
-          <button
-            className="  bg-sky-100 text-blue-500 py-1 px-10 rounded-2xl hover:bg-blue-300"
-            onClick={() => onClose(false)}
-          >
-            取消
-          </button>
-          <button
-            className="ml-8 bg-blue-500 text-white py-1 px-10 rounded-2xl hover:bg-blue-300"
-            onClick={onOk}
-          >
-            确认
-          </button>
-        </footer>
+        {showBottom && (
+          <footer className="flex flex-row justify-center items-center px-2 py-4 pb-[40px]">
+            <button
+              className="  bg-sky-100 text-blue-500 py-1 px-10 rounded-2xl hover:bg-blue-300"
+              onClick={() => onClose(false)}
+            >
+              取消
+            </button>
+            <button
+              className="ml-8 bg-blue-500 text-white py-1 px-10 rounded-2xl hover:bg-blue-300"
+              onClick={onOk}
+            >
+              确认
+            </button>
+          </footer>
+        )}
       </div>
     </div>
   );

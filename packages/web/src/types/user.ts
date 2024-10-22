@@ -15,7 +15,7 @@ export interface Message {
   deleted?: boolean;
 }
 
-export interface MessageMap {
+export interface MessagesMap {
   [messageId: string]: Message;
 }
 
@@ -49,7 +49,7 @@ export interface Group {
 export interface Linkman extends Group, User {
   type: string;
   unread: number;
-  messages: MessageMap;
+  messages: MessagesMap;
 }
 
 export interface LinkmansMap {

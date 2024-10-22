@@ -18,6 +18,8 @@ importers:
         specifier: ^5.5.4
         version: 5.5.4
 
+  packages/assets: {}
+
   packages/config:
     dependencies:
       ip:
@@ -142,9 +144,15 @@ importers:
 
   packages/web:
     dependencies:
+      '@filego/assets':
+        specifier: workspace:*
+        version: link:../assets
       '@filego/config':
         specifier: workspace:*
         version: link:../config
+      '@filego/utils':
+        specifier: workspace:*
+        version: link:../utils
       '@reduxjs/toolkit':
         specifier: ^2.2.7
         version: 2.2.7(react-redux@9.1.2(@types/react@18.3.3)(react@18.3.1)(redux@5.0.1))(react@18.3.1)

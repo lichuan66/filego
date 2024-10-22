@@ -34,10 +34,6 @@ bg-white border-[#ccc] border
 }
 
 export default function Base() {
-  const phoneIconPath = require("@/assets/icons/phone.svg");
-  const userIconPath = require("@/assets/icons/user.svg");
-  const plusIconPath = require("@/assets/icons/plus.svg");
-  const more = require("@/assets/icons/more.svg");
   const bgUrl = require("../../assets/images/bg.jpg");
 
   const navigate = useNavigate();
@@ -61,22 +57,22 @@ export default function Base() {
   const FuncButtonList: FuncButtonProps[] = [
     {
       name: "手机号登录",
-      iconPath: phoneIconPath,
+      iconPath: "shouji",
       onClick: () => {},
     },
     {
       name: "其他方式登录",
-      iconPath: userIconPath,
+      iconPath: "yonghu",
       onClick: () => {},
     },
     {
       name: "注册",
-      iconPath: plusIconPath,
+      iconPath: "a-teshujia",
       onClick: gotoRegister,
     },
     {
       name: "更多",
-      iconPath: more,
+      iconPath: "gengduo",
       onClick: () => {},
     },
   ];

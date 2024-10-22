@@ -17,6 +17,7 @@ type FuncButtonProps = {
   className?: string;
   buttonClassName?: string;
   spanClassName?: string;
+  iconColor?: string;
   onClick?: (val: number) => void;
 };
 
@@ -28,6 +29,7 @@ function FuncButton({
   spanClassName = "",
   buttonClassName = "",
   className = "",
+  iconColor = "white",
   onClick = (val) => {},
 }: FuncButtonProps) {
   const setIndex = function () {
@@ -45,7 +47,13 @@ function FuncButton({
         )}
         onClick={setIndex}
       >
-        <IconButton icon={iconPath} width={48} height={48} iconSize={48} />
+        <IconButton
+          icon={iconPath}
+          width={28}
+          height={28}
+          iconSize={24}
+          iconColor={iconColor}
+        />
       </Button>
       <span className={cn("text-xs mt-1 text-skyblue-400", spanClassName)}>
         {name}
@@ -86,6 +94,7 @@ function AvatarSetting({
               iconPath={elem.iconPath}
               route={elem.route}
               onClick={elem.onClick}
+              iconColor={elem.iconColor}
               className="group md:hover:bg-inherit text-black "
               buttonClassName="md:hover:bg-transparent"
               spanClassName="group-hover:text-sky-600"
@@ -98,17 +107,6 @@ function AvatarSetting({
 }
 
 export default function Sidebar() {
-  const wenjianIconPath = require("@/assets/icons/wenjian.svg");
-  const duihuaIconPath = require("@/assets/icons/duihua.svg");
-  const groupIconPath = require("@/assets/icons/group.svg");
-
-  const fankuiIconPath = require("@/assets/icons/fankui.svg");
-  const youjianIconPath = require("@/assets/icons/youjian.svg");
-  const guanyuIconPath = require("@/assets/icons/guanyu.svg");
-  const exitIconPath = require("@/assets/icons/exit.svg");
-
-  const avatarPath = require("@/assets/avatar/0.jpg");
-
   const navigate = useNavigate();
 
   const [subRouteIndex, setSubRouteIndex] = useState(2);
@@ -121,21 +119,21 @@ export default function Sidebar() {
     {
       index: 1,
       name: "首页",
-      iconPath: wenjianIconPath,
+      iconPath: "wenjianjia3",
       route: "/home",
       onClick: setSubRouteIndex,
     },
     {
       index: 2,
       name: "消息",
-      iconPath: groupIconPath,
+      iconPath: "duorenyonghu",
       route: "/im",
       onClick: setSubRouteIndex,
     },
     {
       index: 3,
       name: "对话",
-      iconPath: duihuaIconPath,
+      iconPath: "jiqiren",
       route: "/aigpt",
       onClick: setSubRouteIndex,
     },
@@ -145,29 +143,33 @@ export default function Sidebar() {
     {
       index: 4,
       name: "我要反馈",
-      iconPath: fankuiIconPath,
+      iconPath: "woyaofankui",
       route: "/home",
+      iconColor: "black",
       onClick: setSubRouteIndex,
     },
     {
       index: 5,
       name: "联系我们",
-      iconPath: youjianIconPath,
+      iconPath: "youjian",
       route: "/aigpt",
+      iconColor: "black",
       onClick: setSubRouteIndex,
     },
     {
       index: 6,
       name: "关于filego",
-      iconPath: guanyuIconPath,
+      iconPath: "changjianwentixiangguanwenti",
       route: "https://github.com/lichuan66/filego",
+      iconColor: "black",
       onClick: setSubRouteIndex,
     },
     {
       index: 7,
       name: "退出登录",
-      iconPath: exitIconPath,
+      iconPath: "tuichu1",
       route: "/login",
+      iconColor: "red",
       onClick: setSubRouteIndex,
     },
   ];

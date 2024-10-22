@@ -32,6 +32,7 @@ export default function MessageList() {
         username={message.from.username}
         content={message.content}
         maxContent={`${divWidth}px`}
+        type={message.type}
       />
     );
   }
@@ -57,10 +58,12 @@ export default function MessageList() {
   }, []);
 
   return (
-    <div className="w-full flex-auto px-2 py-5" ref={divRef}>
-      {Object.values(messages).map((message) => {
-        return renderMessage(message);
-      })}
+    <div className="w-full flex-auto overflow-hidden" ref={divRef}>
+      <div className="w-full h-full px-2 py-5 overflow-x-hidden overflow-y-auto">
+        {Object.values(messages).map((message) => {
+          return renderMessage(message);
+        })}
+      </div>
     </div>
   );
 }

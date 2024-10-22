@@ -32,19 +32,21 @@ export default function HeaderBar(props: PropsType) {
         )}
       </h2>
       {
-        <div className="flex flex-row justify-between items-center gap-2">
+        <div className="flex flex-row justify-between items-center gap-3">
           <IconButton
-            icon={shareIcons}
-            width={32}
-            height={32}
-            iconSize={32}
+            icon={"JC_054"}
+            width={28}
+            height={28}
+            iconSize={28}
+            iconColor="#60a5fa"
             className="cursor-pointer  opacity-100 hover:opacity-40"
           />
           <IconButton
-            icon={gongnengIcons}
-            width={32}
-            height={32}
-            iconSize={32}
+            icon={"zuocedaohangcaidan-caidanhuizong"}
+            width={28}
+            height={28}
+            iconSize={28}
+            iconColor="#60a5fa"
             className="cursor-pointer  opacity-100 hover:opacity-40"
           />
         </div>

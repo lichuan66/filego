@@ -27,7 +27,6 @@ export default function RouteLayer({
   setModeTypeIndex,
 }: Props) {
   const moshiIconPath = require("@/assets/icons/moshi.svg");
-  const duigouIconPath = require("@/assets/icons/duigou.svg");
 
   const fileRoute = useFileRoute();
   const pageType = usePageType();
@@ -42,13 +41,14 @@ export default function RouteLayer({
         return (
           <MenuItem key={elem.index} onClick={changeModeType}>
             <div className="bg-white md:hover:bg-sky-100 px-6 py-2 flex flex-row justify-center items-center  cursor-pointer">
-              <IconButton
-                icon={elem.icon}
-                width={12}
-                height={12}
-                iconSize={12}
-                className={`${modeTypeIndex === elem.index ? "" : "invisible"}`}
-              />
+              <i
+                className="iconfont icon-a-teshuduihao text-blue-500"
+                style={{
+                  fontSize: "14px",
+                  visibility:
+                    modeTypeIndex === elem.index ? "visible" : "hidden",
+                }}
+              ></i>
               <span
                 className={`ml-1 ${
                   modeTypeIndex === elem.index ? "text-[#1296db]" : ""

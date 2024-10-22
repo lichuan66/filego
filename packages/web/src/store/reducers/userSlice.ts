@@ -1,14 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 import { State, Linkman, LinkmansMap } from "../../types/user";
+import getFriendId from "@filego/utils/getFriendId";
+import { Message, MessagesMap } from "../../types/user";
 
 export interface UserState extends State {}
-
-// const initialState: UserState = {
-//   _id: "",
-//   username: "",
-//   avatar: "",
-// };
 
 const initialState: State = {
   user: null,
@@ -114,6 +110,43 @@ export const userSlice = createSlice({
         targetLinkman.messages = messages;
       }
     },
+    addLinkman(state, action) {
+      const { linkman, isFocus } = action.payload;
+      const focus = isFocus ? linkman._id : state.focus;
+      let transformedLinkman = linkman;
+      switch (linkman.type) {
+        case "group":
+          transformedLinkman = transformGroup(linkman);
+          break;
+        case "friend":
+          transformedLinkman = transformFriend(linkman);
+        default:
+          break;
+      }
+      state.linkmans = {
+        ...state.linkmans,
+        [transformedLinkman._id]: transformedLinkman,
+      };
+      state.focus = focus;
+    },
+    setLinkmansLastMessages(state, action) {
+      const { linkmanMessages } = action.payload;
+      const { linkmans } = state;
+      const newLinkmans = { ...linkmans };
+
+      Object.keys(linkmans).forEach((linkmanId) => {
+        newLinkmans[linkmanId] = {
+          ...linkmans[linkmanId],
+          ...(linkmanMessages[linkmanId]
+            ? {
+                messages: getMessagesMap(linkmanMessages[linkmanId].messages),
+                unread: linkmanMessages[linkmanId].unread,
+              }
+            : {}),
+        };
+      });
+      state.linkmans = newLinkmans;
+    },
   },
 });
 
@@ -124,6 +157,8 @@ export const {
   addLinkmanMessage,
   deleteMessage,
   updateMessage,
+  addLinkman,
+  setLinkmansLastMessages,
 } = userSlice.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 export const selectCount = (state: RootState) => state.user;
@@ -163,13 +198,6 @@ function transformGroup(group: Linkman): Linkman {
   return group;
 }
 
-function getFriendId(userId1: string, userId2: string) {
-  if (userId1 < userId2) {
-    return userId1 + userId2;
-  }
-  return userId2 + userId1;
-}
-
 /**
  * 转换好友的数据结构
  */
@@ -185,4 +213,15 @@ function transformFriend(friend: Linkman): Linkman {
   };
   initLinkmanFields(transformedFriend as Linkman, "friend");
   return transformedFriend as Linkman;
+}
+
+/**
+ * 将消息以_id为键转为对象结构
+ * @param messages 消息数组
+ */
+function getMessagesMap(messages: Message[]) {
+  return messages.reduce((map: MessagesMap, message) => {
+    map[message._id] = message;
+    return map;
+  }, {});
 }

@@ -8,19 +8,16 @@ type ImMenuProps = {
 };
 
 export default function ImMenu({ imMenuIndex, setImMenuIndex }: ImMenuProps) {
-  const messageIconPath = require("@/assets/icons/message.svg");
-  const tongxunluIconPath = require("@/assets/icons/tongxunlu.svg");
-
   const imMenuContent = [
     {
       index: 1,
       label: "会话",
-      icon: messageIconPath,
+      icon: "duihua",
     },
     {
       index: 2,
       label: "通讯录",
-      icon: tongxunluIconPath,
+      icon: "tongxunlu",
     },
   ];
 
@@ -35,12 +32,10 @@ export default function ImMenu({ imMenuIndex, setImMenuIndex }: ImMenuProps) {
                 cursor-pointer font-bold py-2 pl-6 text-[14px] flex flex-row items-center`}
                 onClick={() => setImMenuIndex(elem.index)}
               >
-                <IconButton
-                  icon={elem.icon}
-                  width={14}
-                  height={14}
-                  iconSize={14}
-                />
+                <i
+                  className={`iconfont icon-${elem.icon}`}
+                  style={{ color: imMenuIndex === elem.index ? "#60a5fa" : "" }}
+                ></i>
                 <span
                   className={`${
                     imMenuIndex === elem.index ? "text-blue-400" : ""

@@ -4,7 +4,6 @@ import type { Linkman } from "../../../types/user";
 import LinkmanComponent from "./Linkman";
 
 export default function LinkmanList() {
-  const list = [1, 2, 34, 5, 6, 7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
   const linkmans = useLinkmans();
 
   function renderLinkman(linkman: Linkman) {

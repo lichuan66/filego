@@ -34,8 +34,6 @@ function FuncButton({ name, iconPath, onClick = () => {} }: FuncButtonProps) {
 }
 
 export default function Base() {
-  const backIconPath = require("@/assets/icons/back.svg");
-  const more = require("@/assets/icons/more.svg");
   const bgUrl = require("../../assets/images/bg.jpg");
 
   const navigate = useNavigate();
@@ -59,12 +57,12 @@ export default function Base() {
   const FuncButtonList: FuncButtonProps[] = [
     {
       name: "已有账号, 去登录",
-      iconPath: backIconPath,
+      iconPath: "xiangzuo",
       onClick: gotoLogin,
     },
     {
       name: "更多",
-      iconPath: more,
+      iconPath: "gengduo",
       onClick: () => {},
     },
   ];
@@ -80,7 +78,6 @@ export default function Base() {
   async function registerHandler() {
     try {
       const user: any = await register(username, password);
-      console.log("user ===>", user);
       if (user) {
         setUserInfo(user);
         setToken(user.token);

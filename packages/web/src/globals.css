@@ -18,3 +18,11 @@
   video {
     height: 100%;
   }
+
+  .danger {
+    background-color: #dd514c !important;
+
+    &:hover {
+        background-color: #d7342e !important;
+    }
+  }
