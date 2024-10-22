@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "../../components/Modal";
 import Avatar from "../../components/Avatar";
 import Button from "../../components/Button";
@@ -29,6 +29,11 @@ export default function UserInfo(props: PropType) {
   const linkman = linkmans[user?._id];
   const isFriend = linkman && linkman.type === "friend";
   const originUserId = user && user._id.replace(selfId, "");
+
+  useEffect(() => {
+    if (user && user._id) {
+    }
+  }, [selfId, user]);
 
   async function handleAddFriend() {
     console.log(12345);
