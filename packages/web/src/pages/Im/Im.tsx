@@ -3,7 +3,7 @@ import ImMenu from "./ImMenu";
 import ImLinkList from "./ImLinkList";
 import Imchat from "./ImChat";
 import { ShowUserOrGroupInfoContext } from "../../context";
-import UserInfo from "./userInfo";
+import UserInfo from "./UserInfo";
 
 export default function Im() {
   const [imMenuIndex, setImMenuIndex] = useState(1);
