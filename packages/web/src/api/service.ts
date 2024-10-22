@@ -57,3 +57,48 @@ export const getGroupOnlineMembers = (() => {
 export async function sendMessage(to: string, type: string, content: string) {
   return fetch("sendMessage", { to, type, content });
 }
+
+/**
+ * 创建群组
+ * @param name 群组名
+ * @returns
+ */
+export async function createGroup(name: string) {
+  const [_, group] = await fetch("createGroup", { name });
+  return group;
+}
+
+export async function addFriend(userId: string) {
+  const [, user] = await fetch("addFriend", { userId });
+  return user;
+}
+
+/**
+ * 使用token登陆
+ * @param token
+ * @returns
+ */
+export async function loginByToken(token: string) {
+  const [err, user] = await fetch("loginByToken", { token });
+  if (err) {
+    return null;
+  }
+  return user;
+}
+
+/**
+ *  Get the last messages and unread number of a group of linkmans
+ * @param linkmanIds
+ * @returns
+ */
+export async function getLinkmansLastMessagesV2(linkmanIds: string[]) {
+  const [, linkmanMessages] = await fetch("getLinkmansLastMessagesV2", {
+    linkmans: linkmanIds,
+  });
+  return linkmanMessages;
+}
+
+export async function getUserOnlineStatus(userId: string) {
+  const [, res] = await fetch("getUserOnlineStatus", { userId });
+  return res && res.isOnline;
+}

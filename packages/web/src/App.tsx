@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import routes from "./routes";
 import usePage from "./hook/useAction";
+import "./assets/styles/iconfont.css";
 
 const router = createBrowserRouter(routes);
 

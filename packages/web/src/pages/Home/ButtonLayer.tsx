@@ -11,9 +11,6 @@ import getFileListHandler from "../../lib/getFileList";
 import sliceFile from "../../lib/sliceFile";
 
 export default function ButtonLayer() {
-  const uploadIconPath = require("@/assets/icons/shangchuan.svg");
-  const xinjianIconPath = require("@/assets/icons/xinjian.svg");
-
   const [searchValue, setSearchValue] = useState("");
   const [newFolderName, setNewFolderName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -91,13 +88,11 @@ export default function ButtonLayer() {
           className="md:hover:bg-sky-400 rounded-2xl bg-sky-400 w-24 font-custom py-[2px]"
         >
           <div className="flex flex-row items-center justify-center">
-            <IconButton
-              icon={uploadIconPath}
-              width={18}
-              height={18}
-              iconSize={18}
-            />
-            <span className="text-[14px] ml-1">上传</span>
+            <i
+              className="iconfont icon-shangchuan"
+              style={{ fontSize: "12px" }}
+            ></i>
+            <span className="text-[14px] ml-2">上传</span>
           </div>
         </Button>
         <Button
@@ -105,13 +100,11 @@ export default function ButtonLayer() {
           className="ml-3 md:hover:bg-sky-400/30 rounded-2xl bg-sky-300/10 w-30 font-custom py-[2px] text-blue-600"
         >
           <div className="flex flex-row items-center justify-center">
-            <IconButton
-              icon={xinjianIconPath}
-              width={18}
-              height={18}
-              iconSize={18}
-            />
-            <span className="text-[14px] ml-1">新建文件夹</span>
+            <i
+              className="iconfont icon-xinjianwenjianjia"
+              style={{ fontSize: "16px" }}
+            ></i>
+            <span className="text-[14px] ml-2">新建文件夹</span>
           </div>
         </Button>
         <input type="file" style={{ display: "none" }} id="uploadFile" />

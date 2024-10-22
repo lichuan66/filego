@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import IconButton from "../../../components/IconButton";
 import {
   useFocus,
@@ -9,18 +9,18 @@ import {
 } from "../../../hook/useUser";
 import useAction from "../../../hook/useAction";
 import { sendMessage } from "../../../api/service";
+import Dropdown from "rc-dropdown";
+import Expression from "./Expression";
 
 export default function ChatInput() {
-  const expressIcons = require("../../../assets/icons/express.svg");
-  const featureIcons = require("../../../assets/icons/feature.svg");
-  const sendIcons = require("../../../assets/icons/send.svg");
-
-  const inputRef = useRef<HTMLInputElement>(null);
   const focusId = useFocus();
   const selfId = useSelfId() as string;
   const username = useUsername() as string;
   const avatar = useAvatar() as string;
   const { addLinkmanMessage, deleteMessage, updateMessage } = useAction();
+
+  const [expressionDialog, setExpressionDialog] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function addSelfMessage(type: string, content: string) {
     const _id = focusId + Date.now();
@@ -28,7 +28,7 @@ export default function ChatInput() {
       _id,
       type,
       content,
-      createTime: new Date(),
+      createTime: Date.now(),
       from: {
         _id: selfId,
         username,
@@ -65,6 +65,7 @@ export default function ChatInput() {
     if (message.length === 0) {
       return null;
     }
+
     const id = addSelfMessage("text", message);
     handleSendMessage(id, "text", message);
 
@@ -79,20 +80,64 @@ export default function ChatInput() {
     }
   }
 
+  /**
+   * 插入文本到输入框光标处
+   * @param value 要插入的文本
+   */
+  function insertAtCursor(value: string) {
+    const input = inputRef.current as unknown as HTMLInputElement;
+    if (input.selectionStart || input.selectionStart === 0) {
+      const startPos = input.selectionStart;
+      const endPos = input.selectionEnd;
+      const restoreTop = input.scrollTop;
+      input.value =
+        input.value.substring(0, startPos) +
+        value +
+        input.value.substring(endPos as number, input.value.length);
+      if (restoreTop > 0) {
+        input.scrollTop = restoreTop;
+      }
+      input.focus();
+      input.selectionStart = startPos + value.length;
+      input.selectionEnd = startPos + value.length;
+    } else {
+      input.value += value;
+      input.focus();
+    }
+  }
+
+  function handleSelectExpression(expression: string) {
+    setExpressionDialog(false);
+    insertAtCursor(`#(${expression})`);
+  }
+
   return (
     <div className="w-full h-[70px] flex flex-row items-center px-4 gap-2 border-t">
+      <Dropdown
+        trigger={["click"]}
+        visible={expressionDialog}
+        onVisibleChange={setExpressionDialog}
+        overlay={
+          <div className="w-[415px] h-[242px] bg-white translate-y-[-7px]">
+            <Expression onSelectText={handleSelectExpression} />
+          </div>
+        }
+      >
+        <IconButton
+          icon={"xiaolian-copy"}
+          iconSize={34}
+          width={34}
+          height={34}
+          iconColor="#60a5fa"
+          className="cursor-pointer  opacity-100 hover:opacity-40"
+        />
+      </Dropdown>
       <IconButton
-        icon={expressIcons}
-        iconSize={38}
-        width={38}
-        height={38}
-        className="cursor-pointer  opacity-100 hover:opacity-40"
-      />
-      <IconButton
-        icon={featureIcons}
-        iconSize={38}
-        width={38}
-        height={38}
+        icon={"caidan2"}
+        iconSize={32}
+        width={32}
+        height={32}
+        iconColor="#60a5fa"
         className="cursor-pointer  opacity-100 hover:opacity-40"
       />
       <form
@@ -109,11 +154,13 @@ export default function ChatInput() {
         />
       </form>
       <IconButton
-        icon={sendIcons}
-        iconSize={38}
-        width={38}
-        height={38}
+        icon={"mn_fasong_fill"}
+        iconSize={32}
+        width={32}
+        height={32}
+        iconColor="#60a5fa"
         className="cursor-pointer  opacity-100 hover:opacity-40"
+        onClick={sendTextMessage}
       />
     </div>
   );

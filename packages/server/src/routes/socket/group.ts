@@ -1,7 +1,8 @@
 import stringHash from "string-hash";
 import Socket from "@filego/database/mongoose/models/socket";
 import Group, { GroupDocument } from "@filego/database/mongoose/models/group";
-import { AssertionError } from "assert";
+import assert, { AssertionError } from "assert";
+import getRandomAvatar from "@filego/utils/getRandomAvatar";
 
 const GroupOnlineMembersCacheExpireTime = 1000 * 60;
 
@@ -30,6 +31,38 @@ async function getGroupOnlineMembersHelper(group: GroupDocument) {
   }, new Map());
 
   return Array.from(filterSockets.values());
+}
+
+export async function createGroup(ctx: Context<{ name: string }>) {
+  const { name } = ctx.data;
+
+  assert(name, "请输入群组名");
+
+  const group = await Group.findOne({ name });
+  if (group) {
+    assert(!group, "该群组已存在");
+  }
+
+  let newGroup = null;
+  try {
+    newGroup = await Group.create({
+      name,
+      avatar: getRandomAvatar(),
+      creator: ctx.socket.user,
+      members: [ctx.socket.user],
+    });
+  } catch (error) {
+    throw error;
+  }
+
+  ctx.socket.join((newGroup._id as string).toString());
+  return {
+    _id: newGroup._id,
+    avatar: newGroup.avatar,
+    name: newGroup.name,
+    creator: newGroup.creator,
+    createTime: newGroup.createTime,
+  };
 }
 
 /**

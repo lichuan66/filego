@@ -75,11 +75,11 @@ export default function Input({
          justify-center items-center hover:bg-[#ccc] cursor-pointer`,
           iconClassName
         )}
-        style={{
-          width: `${iconSize}px`,
-          height: `${iconSize}px`,
-          display: value ? "" : "none",
-        }}
+        // style={{
+        //   width: `${iconSize}px`,
+        //   height: `${iconSize}px`,
+        //   display: value ? "" : "none",
+        // }}
         icon={iconPath}
         width={15}
         height={15}

@@ -12,10 +12,11 @@ import {
   addLinkmanMessage,
   deleteMessage,
   updateMessage,
+  addLinkman,
 } from "../store/reducers/userSlice";
 import { setFileRoute, setFileList } from "../store/reducers/fileSlice";
 import type { FileRouterType, FileType } from "../store/reducers/fileSlice";
-import type { Message } from "../types/user";
+import type { Linkman, Message } from "../types/user";
 
 export default function useAction() {
   const dispatch = useDispatch();
@@ -53,6 +54,9 @@ export default function useAction() {
     },
     updateMessage(linkmanId: string, messageId: string, value: any) {
       dispatch(updateMessage({ linkmanId, messageId, value }));
+    },
+    addLinkman(linkman: Linkman, isFocus: boolean) {
+      dispatch(addLinkman({ linkman, isFocus }));
     },
   };
 }

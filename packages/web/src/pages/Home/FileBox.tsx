@@ -39,28 +39,22 @@ export default function FileBox({
   suolueStatus,
 }: FileBoxProps) {
   let targetIconPath = require(`@/assets/icons/${iconPath}`);
-  const fenxiangIconPath = require("@/assets/icons/fenxiang.svg");
-  const xiazaiIconPath = require("@/assets/icons/xiazai.svg");
-  const bluemoreIconPath = require("@/assets/icons/bluemore.svg");
-  const deleteIconPath = require("@/assets/icons/delete.svg");
-  const renameIconPath = require("@/assets/icons/rename.svg");
-  const copyIconPath = require("@/assets/icons/copy.svg");
 
   const boxSettingList = [
     {
       index: 1,
       name: "分享",
-      icon: fenxiangIconPath,
+      icon: "fenxiang",
     },
     {
       index: 2,
       name: "下载",
-      icon: xiazaiIconPath,
+      icon: "xiazai",
     },
     {
       index: 3,
       name: "更多",
-      icon: bluemoreIconPath,
+      icon: "gengduo",
     },
   ];
 
@@ -69,19 +63,19 @@ export default function FileBox({
       index: "1",
       name: "删除",
       value: "delete",
-      icon: deleteIconPath,
+      icon: "shanchu",
     },
     {
       index: "2",
       name: "重命名",
       value: "rename",
-      icon: renameIconPath,
+      icon: "zhongmingming",
     },
     {
       index: "3",
       name: "复制",
       value: "copy",
-      icon: copyIconPath,
+      icon: "fuzhi",
     },
   ];
 
@@ -160,12 +154,7 @@ export default function FileBox({
         return (
           <MenuItem key={elem.index} onClick={onClick}>
             <div className="bg-white md:hover:bg-sky-100 text-black pl-2 pr-6 py-2 flex flex-row justify-start items-center  cursor-pointer">
-              <IconButton
-                icon={elem.icon}
-                width={12}
-                height={12}
-                iconSize={12}
-              />
+              <i className={`iconfont icon-${elem.icon}`}></i>
               <span className={`ml-1`}>{elem.name}</span>
             </div>
           </MenuItem>
@@ -194,6 +183,7 @@ export default function FileBox({
                     width={20}
                     height={20}
                     iconSize={20}
+                    iconColor="blue"
                     className="mx-[1px]"
                     onClick={() => changeModeType(name, elem.name)}
                   />
@@ -216,6 +206,7 @@ export default function FileBox({
                         width={18}
                         height={18}
                         iconSize={18}
+                        iconColor="blue"
                         className="cursor-pointer"
                       />
                     </button>
@@ -227,12 +218,7 @@ export default function FileBox({
         </div>
         <div className="flex-1 flex flex-col justify-center items-center">
           <div>
-            <IconButton
-              icon={targetIconPath}
-              width={60}
-              height={60}
-              iconSize={60}
-            />
+            <img src={targetIconPath} width={60} height={60} />
           </div>
           <div className="w-full text-center text-ellipsis overflow-hidden whitespace-nowrap">
             <span className="w-full text-xs font-semibold ">{name}</span>

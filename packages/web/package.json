@@ -43,6 +43,8 @@
   },
   "dependencies": {
     "@filego/config": "workspace:*",
+    "@filego/utils": "workspace:*",
+    "@filego/assets": "workspace:*",
     "@reduxjs/toolkit": "^2.2.7",
     "clsx": "^2.1.1",
     "pdfjs-dist": "^2.16.105",

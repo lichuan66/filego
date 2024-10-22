@@ -3,6 +3,7 @@ import { ShowUserOrGroupInfoContext } from "../../../../context";
 import Avatar from "../../../../components/Avatar";
 import Time from "../../../../../../utils/time";
 import config from "@filego/config/client";
+import TextMessage from "./TextMessage";
 
 interface PropsType {
   id: string;
@@ -14,6 +15,7 @@ interface PropsType {
   time: string;
   content: string;
   maxContent: string;
+  type: string;
 }
 
 export default function Message(props: PropsType) {
@@ -24,9 +26,9 @@ export default function Message(props: PropsType) {
     time,
     content,
     maxContent = "200px",
+    userId,
+    type,
   } = props;
-
-  //   const newAvatar = require(avatar);
 
   const isSelfBoxClass = `
   flex-row-reverse
@@ -41,15 +43,13 @@ export default function Message(props: PropsType) {
   rounded-tl-lg rounded-tr-none
   `;
   const isSelfArrowClass = `
-    right-[65px] border-l-green-400   border-r-0  border-l-[7px]
+    right-[55px] border-l-green-400   border-r-0  border-l-[7px]
   `;
 
   function formatTime() {
     const messageTime = new Date(time);
     const nowTime = new Date();
-
     console.log();
-
     if (Time.isToday(nowTime, messageTime)) {
       return Time.getHourMinute(messageTime);
     }
@@ -61,14 +61,42 @@ export default function Message(props: PropsType) {
     )}`;
   }
 
+  function handleClickAvatar(showUserInfo: (userInfo: any) => void) {
+    if (!isSelf) {
+      showUserInfo({
+        _id: userId,
+        username,
+        avatar,
+      });
+    }
+  }
+
+  function renderContent() {
+    switch (type) {
+      case "text":
+        return <TextMessage content={content} />;
+      default:
+        return <div>不支持的消息类型</div>;
+    }
+  }
+
   return (
     <div
-      className={`w-full mb-[10px] relative flex  ${
+      className={`w-full mb-[15px] relative flex  ${
         isSelf ? isSelfBoxClass : "flex-row"
       }`}
     >
       <ShowUserOrGroupInfoContext.Consumer>
-        {(context) => <Avatar src={`http://${config.ServerPublic}${avatar}`} />}
+        {(context) => (
+          <Avatar
+            src={`http://${config.ServerPublic}${avatar}`}
+            onClick={() =>
+              // @ts-ignore
+              handleClickAvatar(context.showUserInfo)
+            }
+            size={46}
+          />
+        )}
       </ShowUserOrGroupInfoContext.Consumer>
 
       <div className={`flex flex-col  ${isSelf ? "mr-[12px]" : "ml-[12px]"}`}>
@@ -83,7 +111,7 @@ export default function Message(props: PropsType) {
                bg-green-400 rounded-lg 
                ${isSelf ? isSelfContentClass : "rounded-tl-none"}`}
           >
-            {content}
+            {renderContent()}
           </div>
         </div>
         <div
@@ -92,7 +120,7 @@ export default function Message(props: PropsType) {
            ${
              isSelf
                ? isSelfArrowClass
-               : "left-[65px] border-r-green-400 border-l-0 border-r-[7px]"
+               : "left-[55px] border-r-green-400 border-l-0 border-r-[7px]"
            }
            `}
         ></div>

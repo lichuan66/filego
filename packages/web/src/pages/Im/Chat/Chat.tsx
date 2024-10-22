@@ -4,7 +4,10 @@ import HeaderBar from "./HeadBar";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
 import { useLinkmans, useFocus } from "../../../hook/useUser";
-import { getGroupOnlineMembers } from "../../../api/service";
+import {
+  getGroupOnlineMembers,
+  getUserOnlineStatus,
+} from "../../../api/service";
 import useAction from "../../../hook/useAction";
 
 export default function Chat() {
@@ -22,11 +25,21 @@ export default function Chat() {
     }
   }
 
+  async function fetchUserOnlineStatus() {
+    const isOnline = await getUserOnlineStatus(focusId);
+    setLinkmanProperty(focusId, "isOnline", isOnline);
+  }
+
   useEffect(() => {
     if (!linkman) {
       return () => {};
     }
-    const request = fetchGroupOnlineMembers;
+    console.log("linkman ===>", linkman);
+
+    const request =
+      linkman.type === "group"
+        ? fetchGroupOnlineMembers
+        : fetchUserOnlineStatus;
     request();
     const timer = setInterval(() => {
       request();
@@ -42,7 +55,7 @@ export default function Chat() {
       {focusId && (
         <div className="w-full h-full flex flex-col bg-[#f7f9fc]">
           <HeaderBar
-            id={linkman.id}
+            id={linkman._id}
             name={linkman.name}
             type={linkman.type}
             onlineMembersCount={linkman.onlineMembers?.length}
