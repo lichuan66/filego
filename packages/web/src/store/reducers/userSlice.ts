@@ -19,7 +19,6 @@ export const userSlice = createSlice({
   initialState: localStorage.getItem("user")
     ? JSON.parse(localStorage.getItem("user") as string)
     : initialState,
-  // initialState,
   reducers: {
     setUserInfo(state, action) {
       const { user } = action.payload;
@@ -147,6 +146,16 @@ export const userSlice = createSlice({
       });
       state.linkmans = newLinkmans;
     },
+    removeLinkman(state, action) {
+      const { linkmanId } = action.payload;
+      console.log(linkmanId, 234);
+
+      delete state.linkmans[linkmanId];
+      const linkmanIds = Object.keys(state.linkmans);
+      const focus = linkmanIds.length > 0 ? linkmanIds[0] : "";
+      state.focus = focus;
+      console.log(state, 234);
+    },
   },
 });
 
@@ -159,6 +168,7 @@ export const {
   updateMessage,
   addLinkman,
   setLinkmansLastMessages,
+  removeLinkman,
 } = userSlice.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 export const selectCount = (state: RootState) => state.user;
@@ -206,7 +216,7 @@ function transformFriend(friend: Linkman): Linkman {
   const { from, to } = friend;
   const transformedFriend = {
     _id: getFriendId(from, to._id),
-    name: to.name,
+    name: to.username,
     avatar: to.avatar,
     // @ts-ignore
     createTime: friend.createTime,

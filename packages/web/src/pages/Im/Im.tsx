@@ -17,6 +17,8 @@ export default function Im() {
   const contextValue = useMemo(
     () => ({
       showUserInfo(user: any) {
+        console.log(user, 33);
+
         setUserInfo(user);
         setUserInfoDialog(true);
       },

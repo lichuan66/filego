@@ -3,7 +3,7 @@ import NoChat from "../../../components/NoChat";
 import HeaderBar from "./HeadBar";
 import MessageList from "./MessageList";
 import ChatInput from "./ChatInput";
-import { useLinkmans, useFocus } from "../../../hook/useUser";
+import { useLinkmans, useFocus, useSelfId } from "../../../hook/useUser";
 import {
   getGroupOnlineMembers,
   getUserOnlineStatus,
@@ -13,6 +13,7 @@ import useAction from "../../../hook/useAction";
 export default function Chat() {
   const focusId = useFocus();
   const linkmans = useLinkmans();
+  const selfId = useSelfId();
   const linkman = linkmans[focusId];
 
   const { setLinkmanProperty } = useAction();
@@ -26,7 +27,7 @@ export default function Chat() {
   }
 
   async function fetchUserOnlineStatus() {
-    const isOnline = await getUserOnlineStatus(focusId);
+    const isOnline = await getUserOnlineStatus(focusId.replace(selfId, ""));
     setLinkmanProperty(focusId, "isOnline", isOnline);
   }
 
@@ -59,6 +60,7 @@ export default function Chat() {
             name={linkman.name}
             type={linkman.type}
             onlineMembersCount={linkman.onlineMembers?.length}
+            isOnline={linkman.isOnline}
           />
           <MessageList />
           <ChatInput />
