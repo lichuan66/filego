@@ -6,7 +6,7 @@ import Message, {
 import Notification from "@filego/database/mongoose/models/notification";
 import User, { UserDocument } from "@filego/database/mongoose/models/user";
 import assert, { AssertionError } from "assert";
-import { isValidObjectId } from "mongoose";
+import isValidObjectId from "@filego/database/mongoose/isValidObjectId";
 import History from "@filego/database/mongoose/models/history";
 
 /** 初次获取历史消息数 */

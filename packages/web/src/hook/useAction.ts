@@ -13,6 +13,7 @@ import {
   deleteMessage,
   updateMessage,
   addLinkman,
+  removeLinkman,
 } from "../store/reducers/userSlice";
 import { setFileRoute, setFileList } from "../store/reducers/fileSlice";
 import type { FileRouterType, FileType } from "../store/reducers/fileSlice";
@@ -57,6 +58,9 @@ export default function useAction() {
     },
     addLinkman(linkman: Linkman, isFocus: boolean) {
       dispatch(addLinkman({ linkman, isFocus }));
+    },
+    removeLinkman(linkmanId: string) {
+      dispatch(removeLinkman({ linkmanId }));
     },
   };
 }

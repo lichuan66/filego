@@ -9,7 +9,7 @@ import path from "path";
 import { createFolder } from "../../utils/fileHandler";
 import Group, { GroupDocument } from "@filego/database/mongoose/models/group";
 import Socket from "@filego/database/mongoose/models/socket";
-import { isValidObjectId } from "mongoose";
+import isValidObjectId from "@filego/database/mongoose/isValidObjectId";
 import Friend from "@filego/database/mongoose/models/friend";
 
 enum ERROR_TYPE {
@@ -285,6 +285,22 @@ export async function addFriend(ctx: Context<{ userId: string }>) {
   };
 }
 
+/**
+ * 删除好友，单向删除
+ */
+export async function deleteFriend(ctx: Context<{ userId: string }>) {
+  const { userId } = ctx.data;
+  assert(isValidObjectId(userId), "无效的用户id");
+
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    throw new AssertionError({ message: "用户不存在" });
+  }
+
+  await Friend.deleteOne({ from: ctx.socket.user, to: user._id });
+  return {};
+}
+
 const UserOnlineStatusCacheExpireTime = 1000 * 60;
 function getUserOnlineStatusWrapper() {
   const cache: Record<string, { value: boolean; expireTime: number }> = {};
@@ -292,6 +308,8 @@ function getUserOnlineStatusWrapper() {
     const { userId } = ctx.data;
     assert(userId, "userId不能为空");
     assert(isValidObjectId(userId), "不合法的userId");
+
+    console.log(cache[userId], 111);
 
     if (cache[userId] && cache[userId].expireTime > Date.now()) {
       return { isOnline: cache[userId].value };
@@ -303,7 +321,9 @@ function getUserOnlineStatusWrapper() {
       value: isOnline,
       expireTime: Date.now() + UserOnlineStatusCacheExpireTime,
     };
+    console.log(cache);
+
     return { isOnline };
   };
 }
-export const getUserOnlineStatus = getUserOnlineStatusWrapper;
+export const getUserOnlineStatus = getUserOnlineStatusWrapper();

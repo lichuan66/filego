@@ -100,5 +100,12 @@ export async function getLinkmansLastMessagesV2(linkmanIds: string[]) {
 
 export async function getUserOnlineStatus(userId: string) {
   const [, res] = await fetch("getUserOnlineStatus", { userId });
+  console.log(res, 123456);
+
   return res && res.isOnline;
+}
+
+export async function deleteFriend(userId: string) {
+  const [err] = await fetch("deleteFriend", { userId });
+  return !err;
 }
