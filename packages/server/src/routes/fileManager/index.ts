@@ -11,6 +11,7 @@ import {
   readText,
   readPdf,
   readVideo,
+  uploadMessageFile,
 } from "./utils/index";
 
 const router = express.Router();
@@ -27,5 +28,6 @@ router.get("/readImg", readImg);
 router.get("/readText", readText);
 router.get("/readPdf", readPdf);
 router.get("/readVideo", readVideo);
+router.post("/uploadMessageFile", upload.single("file"), uploadMessageFile);
 
 export default router;

@@ -434,3 +434,21 @@ export async function readVideo(req: Request, res: Response) {
     res.status(500).json(error.message);
   }
 }
+
+export async function uploadMessageFile(req: Request, res: Response) {
+  try {
+    const file = req.file;
+    const [directory, fileName] = req.body.fileName.split("/");
+    const filePath = path.join(__dirname, "../../../../public", directory);
+    const isExists = fs.existsSync(filePath);
+    if (!isExists) {
+      fs.mkdirSync(filePath);
+    }
+    await writeStreamToFile(path.resolve(filePath, fileName), file);
+    res.status(200).json(`/${req.body.fileName}`);
+  } catch (error: any) {
+    logger.error("[server]", error.message);
+    console.log(error);
+    res.status(500).json(error.message);
+  }
+}

@@ -1,5 +1,9 @@
 import fetch from "../lib/fetchSocket";
 import { GroupMember } from "../types/user";
+import { uploadPostApi } from "../lib/fetch";
+import config from "@filego/config/client";
+
+const userApi = `http://${config.Server}/api/fileManager`;
 
 /** 注册新用户 */
 export async function register(username: string, password: string) {
@@ -108,4 +112,31 @@ export async function getUserOnlineStatus(userId: string) {
 export async function deleteFriend(userId: string) {
   const [err] = await fetch("deleteFriend", { userId });
   return !err;
+}
+
+/**
+ * 上传文件
+ * @param blob 文件blob数据
+ * @param fileName 文件名
+ * @returns
+ */
+export async function uploadFile(blob: any, fileName: string): Promise<string> {
+  const [uploadErr, result] = await fetch("uploadFile", {
+    file: blob,
+    fileName,
+  });
+
+  console.log(uploadErr, result);
+
+  if (uploadErr) {
+    throw Error(uploadErr);
+  }
+  return result.url;
+}
+
+/** 上传Message文件 */
+export async function uploadMessageFile(formData: any) {
+  const url = `${userApi}/uploadMessageFile`;
+  // return fetchPostApi(url, { file: blob, fileName });
+  return uploadPostApi(url, formData);
 }

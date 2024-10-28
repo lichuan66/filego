@@ -35,9 +35,9 @@ export default function Im() {
       <ShowUserOrGroupInfoContext.Provider
         value={contextValue as unknown as null}
       >
-        <div className="w-36 bg-white">
+        {/* <div className="w-36 bg-white">
           <ImMenu setImMenuIndex={setImMenuIndex} imMenuIndex={imMenuIndex} />
-        </div>
+        </div> */}
         <div className="w-100 bg-white mx-1">
           <ImLinkList />
         </div>
