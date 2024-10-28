@@ -28,7 +28,7 @@ export default function Input({
   onEnter = () => {},
   onFocus = () => {},
 }: InputProps) {
-  const iconPath = require("@/assets/icons/guanbi.svg");
+  // const iconPath = require("@/assets/icons/guanbi.svg");
 
   const $input = useRef(null);
 
@@ -80,7 +80,7 @@ export default function Input({
         //   height: `${iconSize}px`,
         //   display: value ? "" : "none",
         // }}
-        icon={iconPath}
+        icon={"a-teshuguanbi"}
         width={15}
         height={15}
         iconSize={15}

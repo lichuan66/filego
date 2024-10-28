@@ -18,20 +18,20 @@ export default function Home() {
   const initIndex = pageType === "web" ? "1" : "2";
   const [modeTypeIndex, setModeTypeIndex] = useState(initIndex);
 
-  const duigouIconPath = require("@/assets/icons/duigou.svg");
+  // const duigouIconPath = require("@/assets/icons/duigou.svg");
 
   const modeTypeList: modeType[] = [
     {
       index: "1",
       name: "缩略模式",
       value: "suolue",
-      icon: duigouIconPath,
+      icon: "a-teshuduihao",
     },
     {
       index: "2",
       name: "列表模式",
       value: "list",
-      icon: duigouIconPath,
+      icon: "a-teshuduihao",
     },
   ];
 

@@ -26,298 +26,11 @@ export default function ListLayer() {
 
   const { setFileRoute, setFileList } = useAction();
 
-  const wenjianjiaIconPath = require("@/assets/icons/wenjianjia.svg");
-  const tupianIconPath = require("@/assets/icons/tupian.svg");
-  const pdfIconPath = require("@/assets/icons/pdf.svg");
-  const zipIconPath = require("@/assets/icons/zip.svg");
-
-  // const fileList = [
-  //   {
-  //     index: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     index: 2,
-  //     name: "图片",
-  //     type: "image",
-  //     updateTime: "08-10 17:05",
-  //     size: "20m",
-  //     iconPath: tupianIconPath,
-  //   },
-  //   {
-  //     index: 3,
-  //     name: "pdf",
-  //     type: "pdf",
-  //     updateTime: "08-10 17:05",
-  //     size: "33k",
-  //     iconPath: pdfIconPath,
-  //   },
-  //   {
-  //     index: 4,
-  //     name: "压缩包",
-  //     type: "zip",
-  //     updateTime: "08-10 17:05",
-  //     size: "33k",
-  //     iconPath: zipIconPath,
-  //   },
-  // ];
-
   const tableColumns = [
     { key: "name", label: "文件名" },
     { key: "updateTime", label: "修改时间" },
     { key: "size", label: "大小" },
   ];
-
-  // const items = [
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "图片",
-  //     type: "image",
-  //     updateTime: "08-10 17:05",
-  //     size: "20m",
-  //     iconPath: tupianIconPath,
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "pdf",
-  //     type: "pdf",
-  //     updateTime: "08-10 17:05",
-  //     size: "33k",
-  //     iconPath: pdfIconPath,
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "压缩包",
-  //     type: "zip",
-  //     updateTime: "08-10 17:05",
-  //     size: "33k",
-  //     iconPath: zipIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  //   {
-  //     id: 1,
-  //     name: "123",
-  //     type: "folder",
-  //     updateTime: "08-10 17:05",
-  //     size: "16k",
-  //     iconPath: wenjianjiaIconPath,
-  //   },
-  // ];
-
-  // /** 点击进入下一层文件夹 */
-  // function enterFolder(value: any) {
-  //   console.log(value);
-  //   const { type, name } = value;
-  //   if (type !== "folder") {
-  //     return;
-  //   }
-  //   const targetRoute = `${fileRoute[fileRoute.length - 1].href}${name}/`;
-  //   const targetFileRoute = [...fileRoute, { label: name, href: targetRoute }];
-  //   setFileRoute(targetFileRoute);
-  // }
 
   useEffect(() => {
     getFileListHandler(fileRoute, setFileList);
@@ -348,11 +61,10 @@ export default function ListLayer() {
         onClick={enterFolder}
       >
         <div>
-          <IconButton
-            icon={require(`@/assets/icons/${item.iconPath}`)}
+          <img
+            src={require(`@/assets/icons/${item.iconPath}`)}
             width={30}
             height={30}
-            iconSize={30}
           />
         </div>
         <div className="flex flex-col ml-5 text-[12px]">
@@ -432,11 +144,10 @@ export default function ListLayer() {
               <div className={`flex flex-row items-center`}>
                 {column.key === "name" && (
                   <div>
-                    <IconButton
-                      icon={require(`@/assets/icons/${rowData.iconPath}`)}
+                    <img
+                      src={require(`@/assets/icons/${rowData.iconPath}`)}
                       width={30}
                       height={30}
-                      iconSize={30}
                     />
                   </div>
                 )}

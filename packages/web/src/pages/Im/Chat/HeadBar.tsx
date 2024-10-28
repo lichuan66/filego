@@ -12,8 +12,8 @@ type PropsType = {
 export default function HeaderBar(props: PropsType) {
   const { id, name, type, onlineMembersCount, isOnline } = props;
 
-  const shareIcons = require("../../../assets/icons/share.svg");
-  const gongnengIcons = require("../../../assets/icons/gongneng.svg");
+  // const shareIcons = require("../../../assets/icons/share.svg");
+  // const gongnengIcons = require("../../../assets/icons/gongneng.svg");
 
   return (
     <div className="w-full h-[70px] px-4 flex flex-row justify-between items-center">
