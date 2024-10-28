@@ -26,8 +26,6 @@ export default function RouteLayer({
   modeTypeIndex,
   setModeTypeIndex,
 }: Props) {
-  const moshiIconPath = require("@/assets/icons/moshi.svg");
-
   const fileRoute = useFileRoute();
   const pageType = usePageType();
 
@@ -78,7 +76,7 @@ export default function RouteLayer({
           >
             <button>
               <IconButton
-                icon={moshiIconPath}
+                icon={"a-teshushouqi"}
                 width={18}
                 height={18}
                 iconSize={18}

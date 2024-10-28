@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
 import Checkbox from "../../components/Checkbox";
 import { useFileRoute, useFileList } from "../../hook/useFile";
 import useAction from "../../hook/useAction";
@@ -18,7 +18,7 @@ export default function FilesLayer() {
     getFileListHandler(fileRoute, setFileList);
   }, [fileRoute]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     // @ts-ignore
     const height = divRef.current.clientHeight - 80;
     if (height) {

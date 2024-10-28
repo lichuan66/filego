@@ -8,7 +8,7 @@ import useAction from "../../../hook/useAction";
 
 export default function FunctionBar() {
   const placeholder = "搜索群组/用户";
-  const addIcon = require("../../../assets/icons/add.svg");
+  // const addIcon = require("../../../assets/icons/add.svg");
 
   const [groupName, setGroupName] = useState("");
   const [isOpen, setIsOpen] = useState(false);
