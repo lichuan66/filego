@@ -33,6 +33,7 @@ export default function MessageList() {
         content={message.content}
         maxContent={`${divWidth}px`}
         type={message.type}
+        percent={message.percent}
       />
     );
   }

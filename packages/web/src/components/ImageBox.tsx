@@ -8,9 +8,13 @@ import Loading from "./Loading";
 type ImageBoxProps = {
   // src: string;
   name: string;
+  type?: string;
 };
 
-export default function ImageBox({ name }: ImageBoxProps) {
+export default function ImageBox({
+  name,
+  type = "fileManager",
+}: ImageBoxProps) {
   const divRef = useRef(null);
   const canvasRef = useRef(null);
   const [loading, setLoading] = useState(true);
@@ -19,7 +23,10 @@ export default function ImageBox({ name }: ImageBoxProps) {
 
   const route = fileRoute[fileRoute.length - 1].href;
   const userApi = `http://${config.Server}/api/fileManager`;
-  const src = `${userApi}/readImg?route=${route}&fileName=${name}&username=${getToken()}`;
+  const src =
+    type === "fileManager"
+      ? `${userApi}/readImg?route=${route}&fileName=${name}&username=${getToken()}`
+      : name;
 
   /** 绘制 */
   function loadImg() {

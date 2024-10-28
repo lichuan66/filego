@@ -20,7 +20,7 @@ export async function newFolder(route: string, folderName: string) {
   return fetchPostApi(url, { route, folderName });
 }
 
-/** 上传文件夹 */
+/** 上传文件 */
 export async function uploadFile(formData: any) {
   const url = `${userApi}/uploadFile`;
   return uploadPostApi(url, formData);

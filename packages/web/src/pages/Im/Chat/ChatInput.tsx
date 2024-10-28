@@ -8,9 +8,14 @@ import {
   useAvatar,
 } from "../../../hook/useUser";
 import useAction from "../../../hook/useAction";
-import { sendMessage } from "../../../api/service";
+import { sendMessage, uploadFile } from "../../../api/service";
 import Dropdown from "rc-dropdown";
 import Expression from "./Expression";
+import { Menu, MenuItem } from "../../../components/Menu";
+import readDiskFile, { ReadFileResult } from "../../../lib/readDiskFile";
+import config from "@filego/config/client";
+import Message from "../../../components/Message";
+import { uploadMessageFile } from "../../../api/service";
 
 export default function ChatInput() {
   const focusId = useFocus();
@@ -80,6 +85,123 @@ export default function ChatInput() {
     }
   }
 
+  function sendImageMessage(image: string): void;
+  function sendImageMessage(image: ReadFileResult): void;
+  function sendImageMessage(image: string | ReadFileResult) {
+    if (typeof image === "string") {
+      return;
+    }
+
+    if (image.length > config.maxImageSize) {
+      Message.warning("要发送的图片过大");
+      return;
+    }
+
+    const ext = image.ext.split("/").pop()?.toLowerCase();
+    // @ts-ignore
+    const url = URL.createObjectURL(image.result);
+
+    console.log("url ===>", url);
+
+    const img = new Image();
+    img.src = url;
+    img.onload = async () => {
+      const id = addSelfMessage("image", `${url}`);
+      try {
+        const formData = new FormData();
+        formData.append("file", image.result as Blob);
+        formData.append(
+          "fileName",
+          `ImageMessage/${selfId}_${Date.now()}.${ext}`
+        );
+        const imageUrl = await uploadMessageFile(formData);
+        handleSendMessage(id, "image", `${imageUrl}`, focusId);
+      } catch (error) {
+        console.error(error);
+        Message.error("上传图片失败");
+      }
+    };
+    img.onerror = (error) => {
+      console.log(error);
+    };
+  }
+
+  async function sendFileMessage(file: ReadFileResult) {
+    if (file.length > config.maxFileSize) {
+      Message.warning("要发送的文件过大", 3);
+      return;
+    }
+
+    const id = addSelfMessage(
+      "file",
+      JSON.stringify({
+        filename: file.filename,
+        size: file.length,
+        ext: file.ext,
+      })
+    );
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file.result as Blob);
+      formData.append(
+        "fileName",
+        `FileMessage/${selfId}_${Date.now()}.${file.ext}`
+      );
+      const fileUrl = await uploadMessageFile(formData);
+      handleSendMessage(
+        id,
+        "file",
+        JSON.stringify({
+          fileUrl,
+          filename: file.filename,
+          size: file.length,
+          ext: file.ext,
+        }),
+        focusId
+      );
+    } catch (error) {
+      console.error(error);
+      Message.error("上传文件失败");
+    }
+  }
+
+  async function handleSendImage() {
+    const image = await readDiskFile("blob", "image/png,image/jpeg,image/gif");
+    if (!image) {
+      return null;
+    }
+    console.log(image);
+    sendImageMessage(image);
+    return null;
+  }
+
+  async function handleSendFile() {
+    const file = await readDiskFile("blob");
+    if (!file) {
+      return;
+    }
+    sendFileMessage(file);
+  }
+
+  function handleFeatureMenuClick({
+    key,
+    domEvent,
+  }: {
+    key: string;
+    domEvent: any;
+  }) {
+    switch (key) {
+      case "image":
+        handleSendImage();
+        break;
+      case "file":
+        handleSendFile();
+      default:
+        break;
+    }
+  }
+
   /**
    * 插入文本到输入框光标处
    * @param value 要插入的文本
@@ -132,14 +254,33 @@ export default function ChatInput() {
           className="cursor-pointer  opacity-100 hover:opacity-40"
         />
       </Dropdown>
-      <IconButton
-        icon={"caidan2"}
-        iconSize={32}
-        width={32}
-        height={32}
-        iconColor="#60a5fa"
-        className="cursor-pointer  opacity-100 hover:opacity-40"
-      />
+      <Dropdown
+        trigger={["click"]}
+        overlay={
+          <div>
+            <Menu onClick={handleFeatureMenuClick}>
+              <MenuItem key="image">
+                <div className="px-3 py-2 cursor-pointer">发送图片</div>
+              </MenuItem>
+              <MenuItem key="file">
+                <div className="px-3 py-2 cursor-pointer">发送文件</div>
+              </MenuItem>
+              <MenuItem key="code">
+                <div className="px-3 py-2 cursor-pointer">发送代码</div>
+              </MenuItem>
+            </Menu>
+          </div>
+        }
+      >
+        <IconButton
+          icon={"caidan2"}
+          iconSize={32}
+          width={32}
+          height={32}
+          iconColor="#60a5fa"
+          className="cursor-pointer  opacity-100 hover:opacity-40"
+        />
+      </Dropdown>
       <form
         onSubmit={(e) => e.preventDefault()}
         className="flex-auto flex justify-center items-center w-[100%]"

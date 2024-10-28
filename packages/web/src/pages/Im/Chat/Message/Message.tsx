@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { ShowUserOrGroupInfoContext } from "../../../../context";
 import Avatar from "../../../../components/Avatar";
 import Time from "../../../../../../utils/time";
 import config from "@filego/config/client";
 import TextMessage from "./TextMessage";
+import ImageMessage from "./ImageMessage";
+import FileMessage from "./FileMessage";
 
 interface PropsType {
   id: string;
@@ -16,6 +18,7 @@ interface PropsType {
   content: string;
   maxContent: string;
   type: string;
+  percent: number;
 }
 
 export default function Message(props: PropsType) {
@@ -28,6 +31,7 @@ export default function Message(props: PropsType) {
     maxContent = "200px",
     userId,
     type,
+    percent,
   } = props;
 
   const isSelfBoxClass = `
@@ -75,6 +79,10 @@ export default function Message(props: PropsType) {
     switch (type) {
       case "text":
         return <TextMessage content={content} />;
+      case "image":
+        return <ImageMessage src={content} />;
+      case "file":
+        return <FileMessage file={content} percent={percent} />;
       default:
         return <div>不支持的消息类型</div>;
     }
@@ -105,17 +113,25 @@ export default function Message(props: PropsType) {
           <span className="text-[#666] text-[12px]">{formatTime()}</span>
         </div>
         <div className={`flex  ${isSelf ? isSelfContentBoxClass : "flex-row"}`}>
-          <div
-            style={{ maxWidth: maxContent }}
-            className={` break-words px-[8px] py-[6px]
-               bg-green-400 rounded-lg 
+          {(type === "text" || type === "file") && (
+            <div
+              style={{ maxWidth: maxContent }}
+              className={` break-words px-[8px] py-[6px]
+               ${
+                 type === "text" || type === "file"
+                   ? "bg-green-400 rounded-lg"
+                   : ""
+               }  
                ${isSelf ? isSelfContentClass : "rounded-tl-none"}`}
-          >
-            {renderContent()}
-          </div>
+            >
+              {renderContent()}
+            </div>
+          )}
+          {type === "image" && <div>{renderContent()}</div>}
         </div>
-        <div
-          className={`absolute top-[20px]  border-transparent
+        {(type === "text" || type === "file") && (
+          <div
+            className={`absolute top-[20px]  border-transparent
             border-t-0  border-b-[15px]  border-solid
            ${
              isSelf
@@ -123,7 +139,8 @@ export default function Message(props: PropsType) {
                : "left-[55px] border-r-green-400 border-l-0 border-r-[7px]"
            }
            `}
-        ></div>
+          ></div>
+        )}
       </div>
     </div>
   );
