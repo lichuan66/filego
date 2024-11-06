@@ -308,9 +308,6 @@ function getUserOnlineStatusWrapper() {
     const { userId } = ctx.data;
     assert(userId, "userId不能为空");
     assert(isValidObjectId(userId), "不合法的userId");
-
-    console.log(cache[userId], 111);
-
     if (cache[userId] && cache[userId].expireTime > Date.now()) {
       return { isOnline: cache[userId].value };
     }
@@ -321,8 +318,6 @@ function getUserOnlineStatusWrapper() {
       value: isOnline,
       expireTime: Date.now() + UserOnlineStatusCacheExpireTime,
     };
-    console.log(cache);
-
     return { isOnline };
   };
 }

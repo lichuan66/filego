@@ -67,6 +67,7 @@ export default function Input({
         onInput={handleInput}
         onKeyDown={handleKeyDown}
         ref={$input}
+        onFocus={onFocus}
       />
       <IconButton
         className={cn(

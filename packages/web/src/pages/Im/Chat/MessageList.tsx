@@ -16,9 +16,20 @@ export default function MessageList() {
   const [divWidth, setDivWidth] = useState(0);
 
   const divRef = useRef<HTMLDivElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
 
   function renderMessage(message: Message) {
     const isSelf = selfId === message.from._id;
+    let shouldScroll = true;
+    if (listRef.current) {
+      // @ts-ignore
+      const { scrollHeight, clientHeight, scrollTop } = listRef.current;
+      shouldScroll =
+        isSelf ||
+        scrollHeight === clientHeight ||
+        scrollTop === 0 ||
+        scrollTop > scrollHeight - clientHeight * 2;
+    }
 
     return (
       <MessageComponent
@@ -34,6 +45,7 @@ export default function MessageList() {
         maxContent={`${divWidth}px`}
         type={message.type}
         percent={message.percent}
+        shouldScroll={shouldScroll}
       />
     );
   }
@@ -60,7 +72,10 @@ export default function MessageList() {
 
   return (
     <div className="w-full flex-auto overflow-hidden" ref={divRef}>
-      <div className="w-full h-full px-2 py-5 overflow-x-hidden overflow-y-auto">
+      <div
+        ref={listRef}
+        className="w-full h-full px-2 py-5 overflow-x-hidden overflow-y-auto"
+      >
         {Object.values(messages).map((message) => {
           return renderMessage(message);
         })}

@@ -34,8 +34,6 @@ export default function UserInfo(props: PropType) {
 
   // @ts-ignore
   const linkman = linkmans[user?._id];
-  console.log(linkman, user, linkmans, 123321);
-
   const isFriend = linkman && linkman.type === "friend";
   const originUserId = user && user._id.replace(selfId, "");
 
@@ -70,8 +68,6 @@ export default function UserInfo(props: PropType) {
         type: "friend",
         createTime: Date.now(),
       };
-      console.log("newLinkman ===>", newLinkman);
-
       addLinkman(newLinkman as unknown as Linkman, true);
       handleFocusUser();
     }

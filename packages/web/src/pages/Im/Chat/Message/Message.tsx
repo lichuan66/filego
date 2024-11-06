@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { ShowUserOrGroupInfoContext } from "../../../../context";
 import Avatar from "../../../../components/Avatar";
 import Time from "../../../../../../utils/time";
@@ -6,6 +6,7 @@ import config from "@filego/config/client";
 import TextMessage from "./TextMessage";
 import ImageMessage from "./ImageMessage";
 import FileMessage from "./FileMessage";
+import InviteMessage from "./InviteMessage";
 
 interface PropsType {
   id: string;
@@ -19,6 +20,7 @@ interface PropsType {
   maxContent: string;
   type: string;
   percent: number;
+  shouldScroll: boolean;
 }
 
 export default function Message(props: PropsType) {
@@ -32,6 +34,7 @@ export default function Message(props: PropsType) {
     userId,
     type,
     percent,
+    shouldScroll,
   } = props;
 
   const isSelfBoxClass = `
@@ -50,10 +53,11 @@ export default function Message(props: PropsType) {
     right-[55px] border-l-green-400   border-r-0  border-l-[7px]
   `;
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
   function formatTime() {
     const messageTime = new Date(time);
     const nowTime = new Date();
-    console.log();
     if (Time.isToday(nowTime, messageTime)) {
       return Time.getHourMinute(messageTime);
     }
@@ -83,16 +87,25 @@ export default function Message(props: PropsType) {
         return <ImageMessage src={content} />;
       case "file":
         return <FileMessage file={content} percent={percent} />;
+      case "invite":
+        return <InviteMessage inviteInfo={content} />;
       default:
         return <div>不支持的消息类型</div>;
     }
   }
+
+  useEffect(() => {
+    if (shouldScroll) {
+      containerRef.current?.scrollIntoView();
+    }
+  }, []);
 
   return (
     <div
       className={`w-full mb-[15px] relative flex  ${
         isSelf ? isSelfBoxClass : "flex-row"
       }`}
+      ref={containerRef}
     >
       <ShowUserOrGroupInfoContext.Consumer>
         {(context) => (
@@ -113,12 +126,12 @@ export default function Message(props: PropsType) {
           <span className="text-[#666] text-[12px]">{formatTime()}</span>
         </div>
         <div className={`flex  ${isSelf ? isSelfContentBoxClass : "flex-row"}`}>
-          {(type === "text" || type === "file") && (
+          {(type === "text" || type === "file" || type === "invite") && (
             <div
               style={{ maxWidth: maxContent }}
               className={` break-words px-[8px] py-[6px]
                ${
-                 type === "text" || type === "file"
+                 type === "text" || type === "file" || type === "invite"
                    ? "bg-green-400 rounded-lg"
                    : ""
                }  

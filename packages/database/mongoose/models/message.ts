@@ -1,4 +1,6 @@
 import { Schema, Document, model } from "mongoose";
+import User from "./user";
+import Group from "./group";
 
 const MessageSchema = new Schema({
   createTime: {
@@ -16,7 +18,7 @@ const MessageSchema = new Schema({
   },
   type: {
     type: String,
-    enum: ["text", "image", "file", "code"],
+    enum: ["text", "image", "file", "code", "invite"],
     default: "text",
   },
   content: {
@@ -51,3 +53,40 @@ export interface MessageDocument extends Document {
 const Message = model<MessageDocument>("Message", MessageSchema);
 
 export default Message;
+
+interface SendMessageData {
+  to: string;
+  type: string;
+  content: string;
+}
+
+export async function handleInviteMessage(message: SendMessageData) {
+  if (message.type === "invite") {
+    const inviteInfo = JSON.parse(message.content);
+    if (inviteInfo.inviter && inviteInfo.group) {
+      const [user, group] = await Promise.all([
+        User.findOne({ _id: inviteInfo.inviter }),
+        Group.findOne({ _id: inviteInfo.group }),
+      ]);
+      if (user && group) {
+        message.content = JSON.stringify({
+          inviter: inviteInfo.inviter,
+          inviterName: user.username,
+          group: inviteInfo.group,
+          groupName: group.name,
+        });
+      }
+      console.log(message.content, 1234);
+    }
+  }
+}
+
+export async function handleInviteMessages(messages: SendMessageData[]) {
+  return Promise.all(
+    messages.map(async (message) => {
+      if (message.type === "invite") {
+        await handleInviteMessage(message);
+      }
+    })
+  );
+}

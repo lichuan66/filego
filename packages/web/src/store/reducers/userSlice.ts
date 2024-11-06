@@ -46,7 +46,23 @@ export const userSlice = createSlice({
     },
     setFocus(state, action) {
       const { focusId } = action.payload;
+
+      /** 为了优化性能
+       * 如果目标联系人的旧消息条数超过50条，仅保留50条
+       */
+      const { messages } = state.linkmans[focusId];
+      const messageKeys = Object.keys(messages);
+      let reserveMessages = messages;
+      state.linkmans = {
+        ...state.linkmans,
+        [focusId]: {
+          ...state.linkmans[focusId],
+          unread: 0,
+        },
+      };
+
       state.focus = focusId;
+      localStorage.setItem("user", JSON.stringify(state));
     },
     setLinkmanProperty(state, action) {
       const { linkmanId, key, value } = action.payload;
@@ -73,6 +89,7 @@ export const userSlice = createSlice({
             unread: targetLinkman.unread,
           },
         };
+        localStorage.setItem("user", JSON.stringify(state));
       }
     },
     deleteMessage(state, action) {
@@ -84,6 +101,7 @@ export const userSlice = createSlice({
       }
       const messages = targetLinkman.messages;
       delete messages[messageId];
+      localStorage.setItem("user", JSON.stringify(state));
     },
     updateMessage(state, action) {
       const { linkmanId, messageId, value } = action.payload;
@@ -107,6 +125,7 @@ export const userSlice = createSlice({
           };
         }
         targetLinkman.messages = messages;
+        localStorage.setItem("user", JSON.stringify(state));
       }
     },
     addLinkman(state, action) {
@@ -127,6 +146,7 @@ export const userSlice = createSlice({
         [transformedLinkman._id]: transformedLinkman,
       };
       state.focus = focus;
+      localStorage.setItem("user", JSON.stringify(state));
     },
     setLinkmansLastMessages(state, action) {
       const { linkmanMessages } = action.payload;
@@ -145,16 +165,26 @@ export const userSlice = createSlice({
         };
       });
       state.linkmans = newLinkmans;
+      localStorage.setItem("user", JSON.stringify(state));
     },
     removeLinkman(state, action) {
       const { linkmanId } = action.payload;
-      console.log(linkmanId, 234);
-
       delete state.linkmans[linkmanId];
       const linkmanIds = Object.keys(state.linkmans);
       const focus = linkmanIds.length > 0 ? linkmanIds[0] : "";
       state.focus = focus;
-      console.log(state, 234);
+      localStorage.setItem("user", JSON.stringify(state));
+    },
+    addLinkmanHistoryMessages(state, action) {
+      const { linkmanId, messages } = action.payload;
+      const messagesMap = getMessagesMap(messages);
+      state.linkmans[linkmanId] = {
+        ...state.linkmans[linkmanId],
+        messages: {
+          ...state.linkmans[linkmanId].messages,
+          ...messagesMap,
+        },
+      };
     },
   },
 });
@@ -169,6 +199,7 @@ export const {
   addLinkman,
   setLinkmansLastMessages,
   removeLinkman,
+  addLinkmanHistoryMessages,
 } = userSlice.actions;
 // 选择器等其他代码可以使用导入的 `RootState` 类型
 export const selectCount = (state: RootState) => state.user;

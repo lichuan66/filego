@@ -1,6 +1,8 @@
 import Group, { GroupDocument } from "@filego/database/mongoose/models/group";
 import { createOrUpdateHistory } from "@filego/database/mongoose/models/history";
 import Message, {
+  handleInviteMessage,
+  handleInviteMessages,
   MessageDocument,
 } from "@filego/database/mongoose/models/message";
 import Notification from "@filego/database/mongoose/models/notification";
@@ -11,6 +13,8 @@ import History from "@filego/database/mongoose/models/history";
 
 /** 初次获取历史消息数 */
 const FirstTimeMessagesCount = 15;
+/** 每次调用接口获取的历史消息数 */
+const EachFetchMessagesCount = 30;
 
 async function pushNotification(
   notificationTokens: string[],
@@ -42,12 +46,25 @@ export async function sendMessage(ctx: Context<SendMessageData>) {
     assert(toGroup, "群组不存在");
   } else {
     const userId = to.replace(ctx.socket.user.toString(), "");
-    toUser = await User.findOne({ id: userId });
+    toUser = await User.findOne({ _id: userId });
     assert(toUser, "用户不存在");
   }
 
   let messageContent = content;
   if (type === "text") {
+  } else if (type === "invite") {
+    const shareTagetGroup = await Group.findOne({ _id: content });
+    if (!shareTagetGroup) {
+      throw new AssertionError({ message: "目标群组不存在" });
+    }
+    const user = await User.findOne({ _id: ctx.socket.user });
+    if (!user) {
+      throw new AssertionError({ message: "用户不存在" });
+    }
+    messageContent = JSON.stringify({
+      inviter: user._id,
+      group: shareTagetGroup._id,
+    });
   }
 
   const user = await User.findOne(
@@ -58,7 +75,6 @@ export async function sendMessage(ctx: Context<SendMessageData>) {
       tag: 1,
     }
   );
-  console.log("user ===>", user, ctx.socket.user);
 
   if (!user) {
     throw new AssertionError({ message: "用户不存在" });
@@ -80,10 +96,12 @@ export async function sendMessage(ctx: Context<SendMessageData>) {
     content: message.content,
   };
 
+  if (type === "invite") {
+    await handleInviteMessage(messageData);
+  }
+
   if (toGroup) {
     ctx.socket.emit((toGroup._id as string).toString(), "message", messageData);
-    console.log(toGroup._id);
-
     const notifications = await Notification.find({
       user: {
         $in: toGroup.members,
@@ -143,6 +161,7 @@ export async function getLinkmansLastMessagesV2(
           limit: historyMap[linkmanId] ? 100 : FirstTimeMessagesCount,
         }
       ).populate("from", { username: 1, avatar: 1, tag: 1 });
+      await handleInviteMessages(messages);
       return messages;
     })
   );
@@ -177,4 +196,33 @@ export async function getLinkmansLastMessagesV2(
   );
 
   return responseData;
+}
+
+/**
+ * 获取联系人的历史消息
+ */
+export async function getLinkmanHistoryMessages(
+  ctx: Context<{ linkmanId: string; existCount: number }>
+) {
+  const { linkmanId, existCount } = ctx.data;
+
+  const messages = await Message.find(
+    {
+      to: linkmanId,
+    },
+    {
+      type: 1,
+      content: 1,
+      from: 1,
+      createTime: 1,
+      deleted: 1,
+    },
+    {
+      sort: { createTime: -1 },
+      limit: EachFetchMessagesCount + existCount,
+    }
+  ).populate("from", { username: 1, avatar: 1, tag: 1 });
+  await handleInviteMessages(messages);
+  const result = messages.slice(existCount).reverse();
+  return result;
 }

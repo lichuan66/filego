@@ -17,6 +17,7 @@ import * as userSocketRoutes from "./routes/socket/user";
 import * as groupSocketRoutes from "./routes/socket/group";
 import * as messageSocketRoutes from "./routes/socket/message";
 import * as systemSocketRoutes from "./routes/socket/system";
+import * as historySocketRoutes from "./routes/socket/history";
 import registerRoute from "./middleware/registerRoute";
 import Group from "@filego/database/mongoose/models/group";
 import getRandomAvatar from "@filego/utils/getRandomAvatar";
@@ -64,6 +65,7 @@ const routesPath: routeListType = [
     ...groupSocketRoutes,
     ...messageSocketRoutes,
     ...systemSocketRoutes,
+    ...historySocketRoutes,
   };
 
   io.on("connection", async (socket) => {

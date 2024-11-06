@@ -5,11 +5,13 @@ import IconButton from "../../components/IconButton";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 // import { login } from "@/api/user";
-import { login } from "../../api/service";
+import { getLinkmansLastMessagesV2, login } from "../../api/service";
 import Message from "../../components/Message";
 import useAction from "../../hook/useAction";
 import { setToken } from "../../api/auth";
 import { usePageType } from "../../hook/usePage";
+import store from "../../store/store";
+import { setLinkmansLastMessages } from "../../store/reducers/userSlice";
 
 type FuncButtonProps = {
   name: string;
@@ -36,6 +38,7 @@ bg-white border-[#ccc] border
 export default function Base() {
   const bgUrl = require("../../assets/images/bg.jpg");
 
+  const { dispatch } = store;
   const navigate = useNavigate();
   const { setUserInfo, setFileRoute } = useAction();
   const pageType = usePageType();
@@ -96,6 +99,13 @@ export default function Base() {
         setPassword("");
         Message.success("登录成功");
         gotoHome();
+
+        const linkmanIds = [
+          ...user.groups.map((group: any) => group._id),
+          ...user.friends.map((friend: any) => friend.to._id),
+        ];
+        const linkmanMessages = await getLinkmansLastMessagesV2(linkmanIds);
+        dispatch(setLinkmansLastMessages({ linkmanMessages }));
       }
     } catch (error: any) {
       console.error(error.message);
