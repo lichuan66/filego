@@ -15,9 +15,6 @@ export default function ImageMessage(props: ImageMessageProps) {
 
   const [isOpenWindow, setIsOpenWindow] = useState(false);
 
-  const width = 200;
-  const height = 200;
-
   const imageSrc = /^(blob|data):/.test(src)
     ? src
     : `http://${config.ServerPublic}${src}`;
@@ -27,11 +24,9 @@ export default function ImageMessage(props: ImageMessageProps) {
       <div>
         <img
           onClick={() => setIsOpenWindow(true)}
-          className="max-w-[500px] max-h-[500px] border rounded-lg cursor-pointer"
+          className="max-w-[200px] max-h-[200px] border rounded-lg cursor-pointer"
           src={imageSrc}
           alt="消息图片"
-          width={width}
-          height={height}
         />
       </div>
       {isOpenWindow &&

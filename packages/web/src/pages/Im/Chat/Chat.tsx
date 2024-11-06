@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NoChat from "../../../components/NoChat";
 import HeaderBar from "./HeadBar";
 import MessageList from "./MessageList";
@@ -9,12 +9,17 @@ import {
   getUserOnlineStatus,
 } from "../../../api/service";
 import useAction from "../../../hook/useAction";
+import { ShowUserOrGroupInfoContext } from "../../../context";
+import { GroupMember } from "../../../types/user";
+import GroupManagePanel from "./GroupManagePanel";
 
 export default function Chat() {
   const focusId = useFocus();
   const linkmans = useLinkmans();
   const selfId = useSelfId();
   const linkman = linkmans[focusId];
+  const context = useContext(ShowUserOrGroupInfoContext);
+  const [groupManagePanel, setGroupManagerPanel] = useState(false);
 
   const { setLinkmanProperty } = useAction();
 
@@ -31,12 +36,38 @@ export default function Chat() {
     setLinkmanProperty(focusId, "isOnline", isOnline);
   }
 
+  async function handleClickFunction() {
+    if (linkman.type === "group") {
+      let onlineMembers: GroupMember[] | { cache: true } = [];
+      onlineMembers = await getGroupOnlineMembers(focusId);
+      if (Array.isArray(onlineMembers)) {
+        setLinkmanProperty(focusId, "onlineMembers", onlineMembers);
+      }
+      setGroupManagerPanel(true);
+    } else {
+      // @ts-ignore
+      context.showUserInfo(linkman);
+    }
+  }
+
+  function handleBodyClick(e: MouseEvent) {
+    const { currentTarget } = e;
+    let target = e.target as HTMLDivElement;
+
+    do {
+      if (target.getAttribute("data-float-panel") === "true") {
+        return;
+      }
+      // @ts-ignore
+      target = target.parentElement;
+    } while (target && target !== currentTarget);
+    setGroupManagerPanel(false);
+  }
+
   useEffect(() => {
     if (!linkman) {
       return () => {};
     }
-    console.log("linkman ===>", linkman);
-
     const request =
       linkman.type === "group"
         ? fetchGroupOnlineMembers
@@ -50,6 +81,13 @@ export default function Chat() {
     };
   }, [focusId]);
 
+  useEffect(() => {
+    document.body.addEventListener("click", handleBodyClick, false);
+    return () => {
+      document.body.removeEventListener("click", handleBodyClick, false);
+    };
+  }, []);
+
   return (
     <div className="w-full h-full">
       {!focusId && <NoChat />}
@@ -61,9 +99,20 @@ export default function Chat() {
             type={linkman.type}
             onlineMembersCount={linkman.onlineMembers?.length}
             isOnline={linkman.isOnline}
+            onClickFunction={handleClickFunction}
           />
           <MessageList />
           <ChatInput />
+          {linkman.type === "group" && (
+            <GroupManagePanel
+              visible={groupManagePanel}
+              onClose={() => setGroupManagerPanel(false)}
+              creator={linkman.creator}
+              avatar={linkman.avatar}
+              groupId={linkman._id}
+              onlineMembers={linkman.onlineMembers}
+            />
+          )}
         </div>
       )}
     </div>

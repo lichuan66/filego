@@ -55,6 +55,8 @@ export default function ChatInput() {
     content: string,
     linkmanId = focusId
   ) {
+    console.log("linkmanId ===>", linkmanId);
+
     const [err, message] = await sendMessage(linkmanId, type, content);
     if (err) {
       deleteMessage(linkmanId, localId);
@@ -70,9 +72,28 @@ export default function ChatInput() {
     if (message.length === 0) {
       return null;
     }
-
-    const id = addSelfMessage("text", message);
-    handleSendMessage(id, "text", message);
+    if (
+      message.startsWith(window.location.origin) &&
+      message.match(/\/invite\/group\/[\w\d]/)
+    ) {
+      const groupId = message.replace(
+        `${window.location.origin}/invite/group/`,
+        ""
+      );
+      const id = addSelfMessage(
+        "invite",
+        JSON.stringify({
+          inviter: selfId,
+          inviterName: username,
+          group: groupId,
+          groupName: "",
+        })
+      );
+      handleSendMessage(id, "invite", groupId);
+    } else {
+      const id = addSelfMessage("text", message);
+      handleSendMessage(id, "text", message);
+    }
 
     // @ts-ignore
     inputRef.current.value = "";
@@ -234,7 +255,7 @@ export default function ChatInput() {
   }
 
   return (
-    <div className="w-full h-[70px] flex flex-row items-center px-4 gap-2 border-t">
+    <div className="w-full h-[70px] flex flex-row items-center px-4 py-2 gap-2 border-t">
       <Dropdown
         trigger={["click"]}
         visible={expressionDialog}
@@ -264,9 +285,6 @@ export default function ChatInput() {
               </MenuItem>
               <MenuItem key="file">
                 <div className="px-3 py-2 cursor-pointer">发送文件</div>
-              </MenuItem>
-              <MenuItem key="code">
-                <div className="px-3 py-2 cursor-pointer">发送代码</div>
               </MenuItem>
             </Menu>
           </div>

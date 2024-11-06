@@ -5,6 +5,8 @@ import {
   addLinkmanMessage,
   setUserInfo,
   setLinkmansLastMessages,
+  setLinkmanProperty,
+  removeLinkman,
 } from "./store/reducers/userSlice";
 import { getLinkmansLastMessagesV2, loginByToken } from "./api/service";
 import getFriendId from "@filego/utils/getFriendId";
@@ -28,9 +30,7 @@ socket.on("connect", async () => {
           getFriendId(friend.from, friend.to)
         ),
       ];
-      console.log(linkmanIds);
       const linkmanMessages = await getLinkmansLastMessagesV2(linkmanIds);
-      console.log(linkmanMessages, 11111);
 
       dispatch(setLinkmansLastMessages({ linkmanMessages }));
     } else {
@@ -39,15 +39,26 @@ socket.on("connect", async () => {
 });
 
 socket.on("message", (message: any) => {
-  console.log("message ===>", message);
   const state = store.getState().user;
-  console.log(state);
   const { linkmans } = state;
   // const isSelfMessage = message.from._id === user.user._id
   const linkman = linkmans[message.to];
   if (linkman) {
     dispatch(addLinkmanMessage({ linkmanId: message.to, message }));
   }
+});
+
+socket.on(
+  "changeGroupName",
+  ({ groupId, name }: { groupId: string; name: string }) => {
+    dispatch(
+      setLinkmanProperty({ linkmanId: groupId, key: "name", value: name })
+    );
+  }
+);
+
+socket.on("deleteGroup", ({ groupId }: { groupId: string }) => {
+  dispatch(removeLinkman({ linkmanId: groupId }));
 });
 
 export default socket;

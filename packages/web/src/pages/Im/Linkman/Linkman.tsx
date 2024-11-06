@@ -2,8 +2,9 @@ import React from "react";
 import Avatar from "../../../components/Avatar";
 import Time from "../../../../../utils/time";
 import useAction from "../../../hook/useAction";
-import { useFocus } from "../../../hook/useUser";
+import { useFocus, useLinkmans } from "../../../hook/useUser";
 import config from "@filego/config/client";
+import { updateHistpry } from "../../../api/service";
 
 interface LinkmanProp {
   id: string;
@@ -19,6 +20,7 @@ export default function Linkman(props: LinkmanProp) {
 
   const { setFocus } = useAction();
   const ficusId = useFocus();
+  const linkmans = useLinkmans();
 
   function formatTime() {
     const nowTime = new Date();
@@ -32,6 +34,15 @@ export default function Linkman(props: LinkmanProp) {
   }
 
   function handleClick() {
+    const nextFocusLinkman = linkmans[id];
+    if (nextFocusLinkman) {
+      const messageKeys = Object.keys(nextFocusLinkman.messages);
+      if (messageKeys.length > 0) {
+        const lastMessageId =
+          nextFocusLinkman.messages[messageKeys[messageKeys.length - 1]]._id;
+        updateHistpry(nextFocusLinkman._id, lastMessageId);
+      }
+    }
     setFocus(id);
   }
 

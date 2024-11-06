@@ -6,8 +6,6 @@ export async function uploadFile(
   ctx: Context<{ fileName: string; file: any }>
 ) {
   try {
-    console.log(ctx.data);
-
     const [directory, fileName] = ctx.data.fileName.split("/");
     const filePath = path.join(__dirname, "../../../public", directory);
     const isExists = fs.existsSync(filePath);

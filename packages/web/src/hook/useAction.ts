@@ -14,6 +14,7 @@ import {
   updateMessage,
   addLinkman,
   removeLinkman,
+  addLinkmanHistoryMessages,
 } from "../store/reducers/userSlice";
 import { setFileRoute, setFileList } from "../store/reducers/fileSlice";
 import type { FileRouterType, FileType } from "../store/reducers/fileSlice";
@@ -61,6 +62,9 @@ export default function useAction() {
     },
     removeLinkman(linkmanId: string) {
       dispatch(removeLinkman({ linkmanId }));
+    },
+    addLinkmanHistoryMessages(linkmanId: string, messages: Message[]) {
+      dispatch(addLinkmanHistoryMessages({ linkmanId, messages }));
     },
   };
 }

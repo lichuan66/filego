@@ -140,3 +140,50 @@ export async function uploadMessageFile(formData: any) {
   // return fetchPostApi(url, { file: blob, fileName });
   return uploadPostApi(url, formData);
 }
+
+export async function updateHistpry(linkmanId: string, messageId: string) {
+  const [, result] = await fetch("updateHistory", { linkmanId, messageId });
+  return !!result;
+}
+
+/**
+ * 加入群组
+ */
+export async function joinGroup(groupId: string) {
+  const [, group] = await fetch("joinGroup", { groupId });
+  return group;
+}
+
+/**
+ * 获取联系人历史消息
+ */
+export async function getLinkmanHistoryMessages(
+  linkmanId: string,
+  existCount: number
+) {
+  const [, messages] = await fetch("getLinkmanHistoryMessages", {
+    linkmanId,
+    existCount,
+  });
+  return messages;
+}
+
+/**
+ * 修改群组名
+ * @param groupId
+ * @param name
+ */
+export async function changeGroupName(groupId: string, name: string) {
+  const [error] = await fetch("changeGroupName", { groupId, name });
+  return !error;
+}
+
+/**
+ * 删除群组
+ * @param groupId
+ * @returns
+ */
+export async function deleteGroup(groupId: string) {
+  const [error] = await fetch("deleteGroup", { groupId });
+  return !error;
+}

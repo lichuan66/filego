@@ -3,6 +3,8 @@ import Socket from "@filego/database/mongoose/models/socket";
 import Group, { GroupDocument } from "@filego/database/mongoose/models/group";
 import assert, { AssertionError } from "assert";
 import getRandomAvatar from "@filego/utils/getRandomAvatar";
+import isValidObjectId from "@filego/database/mongoose/isValidObjectId";
+import Message from "@filego/database/mongoose/models/message";
 
 const GroupOnlineMembersCacheExpireTime = 1000 * 60;
 
@@ -116,3 +118,95 @@ function getGroupOnlineMembersWrapperV2() {
 }
 
 export const getGroupOnlineMembersV2 = getGroupOnlineMembersWrapperV2();
+
+/**
+ * 加入群组
+ */
+export async function joinGroup(ctx: Context<{ groupId: string }>) {
+  const { groupId } = ctx.data;
+  assert(isValidObjectId(groupId), "无效的群组ID");
+
+  const group = await Group.findOne({ _id: groupId });
+  if (!group) {
+    throw new AssertionError({ message: "加入群组失败，群组不存在" });
+  }
+  assert(group.members.indexOf(ctx.socket.user) === -1, "你已经在群组中");
+
+  group.members.push(ctx.socket.user);
+  await group.save();
+
+  const messages = await Message.find(
+    {
+      toGroup: groupId,
+    },
+    {
+      type: 1,
+      content: 1,
+      from: 1,
+      createTime: 1,
+    },
+    {
+      sort: { createTime: -1 },
+      limit: 3,
+    }
+  ).populate("from", { username: 1, avatar: 1 });
+  messages.reverse();
+
+  ctx.socket.join((group._id as string).toString());
+
+  return {
+    _id: group._id,
+    name: group.name,
+    avatar: group.avatar,
+    createTime: group.createTime,
+    creator: group.creator,
+    messages,
+  };
+}
+
+export async function changeGroupName(
+  ctx: Context<{ groupId: string; name: string }>
+) {
+  const { groupId, name } = ctx.data;
+  assert(isValidObjectId(groupId), "无效的群组ID");
+  assert(name, "群组名不能为空");
+
+  const group = await Group.findOne({ _id: groupId });
+  if (!group) {
+    throw new AssertionError({ message: "群组不存在" });
+  }
+  assert(group.name !== name, "群组名不能和之前一致");
+
+  const targetGroup = await Group.findOne({ name });
+  assert(!targetGroup, "该群组名已存在");
+
+  group.name = name;
+  await group.save();
+
+  ctx.socket.emit(groupId, "changeGroupName", { groupId, name });
+
+  return {};
+}
+
+/**
+ * 删除群组
+ */
+export async function deleteGroup(ctx: Context<{ groupId: string }>) {
+  const { groupId } = ctx.data;
+  assert(isValidObjectId(groupId), "无效的群组ID");
+
+  const group = await Group.findOne({ _id: groupId });
+  if (!group) {
+    throw new AssertionError({ message: "群组不存在" });
+  }
+  assert(
+    group.creator.toString() === ctx.socket.user.toString(),
+    "只有群组才能解散群组"
+  );
+  assert(group.isDefault !== true, "默认群组不允许删除");
+
+  await Group.deleteOne({ _id: groupId });
+
+  ctx.socket.emit(groupId, "deleteGroup", { groupId });
+  return {};
+}

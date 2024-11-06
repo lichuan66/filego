@@ -1,5 +1,7 @@
 import React from "react";
 import IconButton from "../../../components/IconButton";
+import CopyToClipboard from "react-copy-to-clipboard";
+import Message from "../../../components/Message";
 
 type PropsType = {
   name: string;
@@ -7,16 +9,19 @@ type PropsType = {
   type: string;
   onlineMembersCount?: number;
   isOnline?: boolean;
+  onClickFunction: () => void;
 };
 
 export default function HeaderBar(props: PropsType) {
-  const { id, name, type, onlineMembersCount, isOnline } = props;
+  const { id, name, type, onlineMembersCount, isOnline, onClickFunction } =
+    props;
 
-  // const shareIcons = require("../../../assets/icons/share.svg");
-  // const gongnengIcons = require("../../../assets/icons/gongneng.svg");
+  function handleShareGroup() {
+    Message.success("已复制邀请链接到粘贴板, 去邀请其它人加入群组吧");
+  }
 
   return (
-    <div className="w-full h-[70px] px-4 flex flex-row justify-between items-center">
+    <div className="w-full h-[70px] px-4 py-1 flex flex-row justify-between items-center">
       <h2>
         {name && (
           <span>
@@ -33,14 +38,21 @@ export default function HeaderBar(props: PropsType) {
       </h2>
       {
         <div className="flex flex-row justify-between items-center gap-3">
-          <IconButton
-            icon={"JC_054"}
-            width={28}
-            height={28}
-            iconSize={28}
-            iconColor="#60a5fa"
-            className="cursor-pointer  opacity-100 hover:opacity-40"
-          />
+          {type === "group" && (
+            <CopyToClipboard
+              text={`${window.location.origin}/invite/group/${id}`}
+            >
+              <IconButton
+                icon={"JC_054"}
+                width={28}
+                height={28}
+                iconSize={28}
+                iconColor="#60a5fa"
+                className="cursor-pointer  opacity-100 hover:opacity-40"
+                onClick={handleShareGroup}
+              />
+            </CopyToClipboard>
+          )}
           <IconButton
             icon={"zuocedaohangcaidan-caidanhuizong"}
             width={28}
@@ -48,6 +60,7 @@ export default function HeaderBar(props: PropsType) {
             iconSize={28}
             iconColor="#60a5fa"
             className="cursor-pointer  opacity-100 hover:opacity-40"
+            onClick={onClickFunction}
           />
         </div>
       }
