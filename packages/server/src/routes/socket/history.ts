@@ -1,4 +1,4 @@
-import { isValidObjectId } from "mongoose";
+import isValidObjectId from "@filego/database/mongoose/isValidObjectId";
 import User from "@filego/database/mongoose/models/user";
 import Group from "@filego/database/mongoose/models/group";
 import Message from "@filego/database/mongoose/models/message";
